@@ -1,0 +1,354 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yuju Life Hub</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family:
+        "Segoe UI",
+        "Malgun Gothic",
+        sans-serif;
+    background:
+        linear-gradient(135deg, #eef5ff, #fff7ef);
+    color: #263247;
+}
+
+button {
+    font-family: inherit;
+}
+
+.header {
+    text-align: center;
+    padding: 42px 20px 25px;
+}
+
+.logo {
+    font-size: 58px;
+    margin-bottom: 5px;
+}
+
+.title {
+    font-size: clamp(32px, 7vw, 58px);
+    font-weight: 900;
+    letter-spacing: -2px;
+    margin: 0;
+}
+
+.subtitle {
+    margin-top: 10px;
+    font-size: 17px;
+    color: #68748a;
+}
+
+.profile {
+    width: min(900px, calc(100% - 30px));
+    margin: 10px auto 30px;
+    padding: 20px;
+    background: rgba(255,255,255,.9);
+    border-radius: 24px;
+    box-shadow: 0 10px 35px rgba(50,70,100,.10);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 20px;
+    background: #f0f4ff;
+    display: grid;
+    place-items: center;
+    font-size: 35px;
+}
+
+.profile-text {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.level {
+    margin-top: 4px;
+    color: #69758a;
+    font-size: 14px;
+}
+
+.xp-box {
+    margin-top: 9px;
+    height: 10px;
+    background: #e9edf4;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.xp-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #7c8cff, #9d7cff);
+    border-radius: 20px;
+    transition: width .3s;
+}
+
+.apps {
+    width: min(1000px, calc(100% - 30px));
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    padding-bottom: 40px;
+}
+
+.app-card {
+    border: 0;
+    border-radius: 27px;
+    padding: 27px 23px;
+    min-height: 170px;
+    background: white;
+    cursor: pointer;
+    text-align: left;
+    box-shadow: 0 9px 28px rgba(50,70,100,.10);
+    transition:
+        transform .18s,
+        box-shadow .18s;
+    position: relative;
+    overflow: hidden;
+}
+
+.app-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(50,70,100,.16);
+}
+
+.app-card:active {
+    transform: scale(.98);
+}
+
+.app-icon {
+    font-size: 48px;
+}
+
+.app-name {
+    margin-top: 12px;
+    font-size: 22px;
+    font-weight: 850;
+}
+
+.app-description {
+    margin-top: 6px;
+    color: #748096;
+    font-size: 14px;
+}
+
+.arrow {
+    position: absolute;
+    right: 20px;
+    bottom: 18px;
+    font-size: 25px;
+    color: #9aa4b6;
+}
+
+.footer {
+    text-align: center;
+    padding: 10px 20px 35px;
+    color: #8a94a5;
+    font-size: 13px;
+}
+
+@media (max-width: 650px) {
+
+    .header {
+        padding-top: 28px;
+    }
+
+    .logo {
+        font-size: 45px;
+    }
+
+    .apps {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .app-card {
+        min-height: 145px;
+    }
+
+    .profile {
+        padding: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">🌟</div>
+    <h1 class="title">Yuju Life Hub</h1>
+    <div class="subtitle">
+        나만의 생활 · 공부 · 게임 공간
+    </div>
+</header>
+
+<section class="profile">
+
+    <div class="avatar">👧</div>
+
+    <div class="profile-text">
+
+        <div class="profile-name">
+            유주
+        </div>
+
+        <div class="level">
+            레벨 <span id="level">1</span>
+            · 경험치
+            <span id="xpText">0 / 100</span>
+        </div>
+
+        <div class="xp-box">
+            <div class="xp-bar" id="xpBar"></div>
+        </div>
+
+    </div>
+
+</section>
+
+<main class="apps">
+
+    <button class="app-card"
+        onclick="openApp('apps/fridge-fairy/index.html', 5)">
+        <div class="app-icon">🧊</div>
+        <div class="app-name">냉장고 요정</div>
+        <div class="app-description">
+            냉장고를 관리하고 생활을 도와주는 게임
+        </div>
+        <div class="arrow">›</div>
+    </button>
+
+    <button class="app-card"
+        onclick="openApp('apps/story-book/index.html', 5)">
+        <div class="app-icon">📖</div>
+        <div class="app-name">이야기책</div>
+        <div class="app-description">
+            재미있는 이야기를 읽고 나만의 이야기도 만들기
+        </div>
+        <div class="arrow">›</div>
+    </button>
+
+    <button class="app-card"
+        onclick="openApp('apps/real-clean-game/index.html', 10)">
+        <div class="app-icon">🧹</div>
+        <div class="app-name">리얼 청소 게임</div>
+        <div class="app-description">
+            게임으로 재미있게 청소하기
+        </div>
+        <div class="arrow">›</div>
+    </button>
+
+    <button class="app-card"
+        onclick="openApp('apps/life-adventure/index.html', 10)">
+        <div class="app-icon">🌳</div>
+        <div class="app-name">라이프 어드벤처</div>
+        <div class="app-description">
+            일상 속에서 펼쳐지는 모험
+        </div>
+        <div class="arrow">›</div>
+    </button>
+
+    <button class="app-card"
+        onclick="openApp('apps/kid-super-assistant/index.html', 10)">
+        <div class="app-icon">🤖</div>
+        <div class="app-name">나만의 비서</div>
+        <div class="app-description">
+            나의 일정을 도와주는 똑똑한 비서
+        </div>
+        <div class="arrow">›</div>
+    </button>
+
+    <button class="app-card"
+        onclick="openApp('apps/study-helper/index.html', 10)">
+        <div class="app-icon">📚</div>
+        <div class="app-name">공부 도우미</div>
+        <div class="app-description">
+            공부 계획과 학습을 도와주는 공간
+        </div>
+        <div class="arrow">›</div>
+    </button>
+
+    <button class="app-card"
+        onclick="openApp('apps/money-adventure/index.html', 10)">
+        <div class="app-icon">💰</div>
+        <div class="app-name">용돈 어드벤처</div>
+        <div class="app-description">
+            용돈을 관리하며 배우는 경제 모험
+        </div>
+        <div class="arrow">›</div>
+    </button>
+
+</main>
+
+<footer class="footer">
+    Yuju Life Hub · My little digital world
+</footer>
+
+<script>
+
+let level = Number(localStorage.getItem("yujuHubLevel") || 1);
+let xp = Number(localStorage.getItem("yujuHubXP") || 0);
+
+function saveProfile() {
+    localStorage.setItem("yujuHubLevel", level);
+    localStorage.setItem("yujuHubXP", xp);
+}
+
+function updateProfile() {
+
+    const needed = level * 100;
+
+    while (xp >= needed) {
+        xp -= needed;
+        level++;
+    }
+
+    const currentNeeded = level * 100;
+
+    document.getElementById("level").textContent = level;
+
+    document.getElementById("xpText").textContent =
+        xp + " / " + currentNeeded;
+
+    document.getElementById("xpBar").style.width =
+        Math.min(100, (xp / currentNeeded) * 100) + "%";
+
+    saveProfile();
+}
+
+function openApp(path, reward) {
+
+    xp += reward;
+
+    updateProfile();
+
+    window.location.href = path;
+}
+
+updateProfile();
+
+</script>
+
+</body>
+</html>

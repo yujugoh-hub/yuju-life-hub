@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>🤖 꼬마 슈퍼비서</title>
+
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+body{
+  margin:0;
+  font-family:Arial,"Noto Sans KR",sans-serif;
+  background:linear-gradient(135deg,#dff5ff,#f4e7ff);
+  color:#263238;
+}
+
+button,input,select{font:inherit}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+.app{min-height:100vh;display:flex}
+
+.sidebar{
+  width:235px;
+  position:fixed;
+  inset:0 auto 0 0;
+  background:white;
+  padding:18px 14px;
+  box-shadow:3px 0 18px #00000012;
+  overflow:auto;
+  z-index:5;
+}
+
+.logo{
+  text-align:center;
+  font-size:23px;
+  font-weight:900;
+  padding:10px 5px 20px;
+}
+
+.menu{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.menu button{
+  padding:13px;
+  border-radius:14px;
+  background:#f4f7fb;
+  text-align:left;
+  font-weight:800;
+}
+
+.menu button:hover,
+.menu button.active{
+  background:#dff2ff;
+}
+
+.main{
+  margin-left:235px;
+  width:calc(100% - 235px);
+  padding:22px;
+}
+
+.topbar{
+  background:#ffffffdd;
+  backdrop-filter:blur(8px);
+  padding:15px 18px;
+  border-radius:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:18px;
+}
+
+.status{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  background:white;
+  padding:9px 13px;
+  border-radius:13px;
+  font-weight:800;
+  box-shadow:0 3px 10px #0000000d;
+}
+
+.screen{display:none}
+.screen.active{display:block}
+
+.card{
+  background:white;
+  border-radius:22px;
+  padding:20px;
+  margin-bottom:17px;
+  box-shadow:0 7px 22px #0000000c;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border:2px solid #e4e8ef;
+  border-radius:12px;
+  margin:5px 0 10px;
+  outline:none;
+}
+
+.btn{
+  padding:10px 15px;
+  border-radius:12px;
+  margin:3px;
+  font-weight:800;
+  background:#e9eef5;
+}
+
+.primary{background:#5b8def;color:white}
+.green{background:#63c88d;color:white}
+.orange{background:#ffad5c;color:white}
+.pink{background:#ff7fa5;color:white}
+.purple{background:#9b7bea;color:white}
+.red{background:#e96b6b;color:white}
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.item{
+  background:#f7f9fc;
+  padding:13px;
+  border-radius:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.done{
+  text-decoration:line-through;
+  opacity:.5;
+}
+
+.big-number{
+  font-size:42px;
+  font-weight:900;
+}
+
+.timer{
+  font-size:72px;
+  font-weight:900;
+  text-align:center;
+  margin:20px 0;
+}
+
+.center{text-align:center}
+
+/* 아바타 */
+.avatar-box{
+  min-height:290px;
+  border-radius:22px;
+  background:linear-gradient(#e8f8ff,#f8edff);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.avatar{
+  width:170px;
+  height:240px;
+  position:relative;
+}
+
+.face{
+  position:absolute;
+  width:120px;
+  height:120px;
+  left:25px;
+  top:35px;
+  background:#ffd5aa;
+  border:4px solid #624c42;
+  border-radius:50%;
+  z-index:3;
+}
+
+.eye{
+  position:absolute;
+  top:40px;
+  width:11px;
+  height:17px;
+  background:#333;
+  border-radius:50%;
+}
+
+.eye.l{left:30px}
+.eye.r{right:30px}
+
+.mouth{
+  position:absolute;
+  width:25px;
+  height:12px;
+  left:43px;
+  top:73px;
+  border-bottom:4px solid #333;
+  border-radius:50%;
+}
+
+.hair{
+  position:absolute;
+  width:132px;
+  height:78px;
+  left:19px;
+  top:25px;
+  background:#5a3924;
+  border-radius:70px 70px 25px 25px;
+  z-index:5;
+}
+
+.hair.blue{background:#5575db}
+.hair.pink{background:#e889b7}
+.hair.blonde{background:#efc55c}
+.hair.long{height:125px}
+
+.body{
+  position:absolute;
+  width:105px;
+  height:95px;
+  left:33px;
+  top:142px;
+  border-radius:35px 35px 20px 20px;
+  z-index:2;
+}
+
+.body.blue{background:#65a8ff}
+.body.pink{background:#ff86ad}
+.body.green{background:#66c98a}
+.body.purple{background:#a786ef}
+
+.shoes{
+  position:absolute;
+  left:42px;
+  top:225px;
+  display:flex;
+  gap:22px;
+  z-index:6;
+}
+
+.shoe{
+  width:38px;
+  height:16px;
+  border-radius:15px;
+  background:#333;
+}
+
+.bag{
+  position:absolute;
+  right:0;
+  top:150px;
+  width:45px;
+  height:55px;
+  background:#ffad5c;
+  border-radius:12px;
+  z-index:6;
+}
+
+.accessory{
+  position:absolute;
+  right:20px;
+  top:10px;
+  font-size:42px;
+  z-index:8;
+}
+
+.quiz-answer{
+  width:100%;
+  margin:5px 0;
+  padding:14px;
+  border-radius:13px;
+  background:#edf4ff;
+  font-weight:900;
+}
+
+.small{
+  font-size:13px;
+  color:#667085;
+}
+
+@media(max-width:800px){
+
+  .app{display:block}
+
+  .sidebar{
+    position:static;
+    width:100%;
+    height:auto;
+  }
+
+  .menu{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .main{
+    margin:0;
+    width:100%;
+    padding:12px;
+  }
+
+  .topbar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .timer{font-size:54px}
+}
+</style>
+</head>
+
+<body>
+<style>
+.yuju-home-button {
+    display: block;
+    width: fit-content;
+    margin: 12px auto 18px auto;
+    padding: 9px 16px;
+    border: 2px solid rgba(0,0,0,.10);
+    border-radius: 14px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(0,0,0,.12);
+    font-family: Arial, sans-serif;
+    position: relative;
+    z-index: 9999;
+}
+
+.yuju-home-button:hover {
+    transform: translateY(-1px);
+}
+
+.yuju-home-button:active {
+    transform: scale(.97);
+}
+</style>
+
+<a class="yuju-home-button" href="../../index.html">&#x1F3E0; 메인으로</a>
+
+
+<div class="app">
+
+<aside class="sidebar">
+
+<div class="logo">
+🤖<br>꼬마 슈퍼비서
+</div>
+
+<div class="menu">
+<button onclick="show('home')">🏠 홈</button>
+<button onclick="show('avatar')">👤 아바타</button>
+<button onclick="show('schedule')">📅 일정</button>
+<button onclick="show('homework')">📝 숙제</button>
+<button onclick="show('supplies')">🎒 준비물</button>
+<button onclick="show('study')">⏱️ 공부 타이머</button>
+<button onclick="show('books')">📚 독서</button>
+<button onclick="show('quiz')">🧠 공부 놀이터</button>
+<button onclick="show('chores')">🧹 집안일</button>
+<button onclick="show('money')">💰 용돈</button>
+<button onclick="show('settings')">⚙️ 설정</button>
+</div>
+
+</aside>
+
+<main class="main">
+
+<div class="topbar">
+<strong>안녕! 👋 오늘도 슈퍼비서와 함께!</strong>
+
+<div class="status">
+<div class="badge">⭐ Lv.<span id="level">1</span></div>
+<div class="badge">XP <span id="xp">0</span></div>
+<div class="badge">💰 <span id="money">0</span>원</div>
+</div>
+</div>
+
+
+<!-- 홈 -->
+
+<section id="home" class="screen active">
+
+<h1>🏠 홈</h1>
+
+<div class="grid">
+
+<div class="card center">
+<h2>👤 내 아바타</h2>
+<div id="homeAvatar"></div>
+<button class="btn primary" onclick="show('avatar')">🎨 꾸미기</button>
+</div>
+
+<div class="card">
+<h2>📋 오늘의 일정</h2>
+<div id="homeSchedule"></div>
+</div>
+
+<div class="card">
+<h2>⏱️ 오늘 공부</h2>
+<div class="big-number" id="homeStudy">0분</div>
+<button class="btn green" onclick="show('study')">📚 공부하기</button>
+</div>
+
+<div class="card">
+<h2>💰 내 용돈</h2>
+<div class="big-number"><span id="homeMoney">0</span>원</div>
+<button class="btn orange" onclick="show('money')">지갑 열기</button>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- 아바타 -->
+
+<section id="avatar" class="screen">
+
+<h1>👤 아바타 꾸미기</h1>
+
+<div class="grid">
+
+<div class="card">
+<h2>✨ 미리보기</h2>
+<div class="avatar-box">
+<div id="avatarPreview"></div>
+</div>
+
+<button class="btn primary" onclick="saveAvatar()">
+✨ 적용하기
+</button>
+</div>
+
+<div class="card">
+
+<h2>💇 머리</h2>
+
+<button class="btn" onclick="setAvatar('hair','brown')">🤎 갈색</button>
+<button class="btn" onclick="setAvatar('hair','blue')">💙 파랑</button>
+<button class="btn" onclick="setAvatar('hair','pink')">💗 분홍</button>
+<button class="btn" onclick="setAvatar('hair','blonde')">💛 금발</button>
+<button class="btn" onclick="setAvatar('hair','long')">👩 긴 머리</button>
+
+<h2>👕 옷</h2>
+
+<button class="btn" onclick="setAvatar('body','blue')">💙 파랑</button>
+<button class="btn" onclick="setAvatar('body','pink')">💗 분홍</button>
+<button class="btn" onclick="setAvatar('body','green')">💚 초록</button>
+<button class="btn" onclick="setAvatar('body','purple')">💜 보라</button>
+
+<h2>🎒 가방</h2>
+
+<button class="btn" onclick="setAvatar('bag',true)">🎒 착용</button>
+<button class="btn" onclick="setAvatar('bag',false)">❌ 벗기</button>
+
+<h2>🎀 액세서리</h2>
+
+<button class="btn" onclick="setAvatar('accessory','🎀')">🎀</button>
+<button class="btn" onclick="setAvatar('accessory','⭐')">⭐</button>
+<button class="btn" onclick="setAvatar('accessory','🌸')">🌸</button>
+<button class="btn" onclick="setAvatar('accessory','🕶️')">🕶️</button>
+<button class="btn" onclick="setAvatar('accessory','')">❌ 없음</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- 일정 -->
+
+<section id="schedule" class="screen">
+
+<h1>📅 일정</h1>
+
+<div class="card">
+
+<input id="scheduleText" placeholder="할 일을 입력하세요">
+<input id="scheduleTime" type="time">
+
+<button class="btn primary" onclick="addSchedule()">➕ 추가</button>
+
+</div>
+
+<div class="card">
+<h2>📋 일정 목록</h2>
+<div id="scheduleList" class="list"></div>
+</div>
+
+</section>
+
+
+<!-- 숙제 -->
+
+<section id="homework" class="screen">
+
+<h1>📝 숙제</h1>
+
+<div class="card">
+
+<input id="homeworkText" placeholder="예: 수학 3쪽">
+
+<button class="btn primary" onclick="addHomework()">➕ 숙제 추가</button>
+
+</div>
+
+<div class="card">
+<div id="homeworkList" class="list"></div>
+</div>
+
+</section>
+
+
+<!-- 준비물 -->
+
+<section id="supplies" class="screen">
+
+<h1>🎒 준비물</h1>
+
+<div class="card">
+
+<input id="supplyText" placeholder="예: 색연필">
+
+<button class="btn primary" onclick="addSupply()">➕ 추가</button>
+
+</div>
+
+<div class="card">
+<div id="supplyList" class="list"></div>
+</div>
+
+</section>
+
+
+<!-- 공부 -->
+
+<section id="study" class="screen">
+
+<h1>⏱️ 공부 타이머</h1>
+
+<div class="card center">
+
+<select id="studyMinutes">
+<option value="5">5분</option>
+<option value="10">10분</option>
+<option value="15">15분</option>
+<option value="20">20분</option>
+<option value="25" selected>25분</option>
+<option value="30">30분</option>
+<option value="40">40분</option>
+<option value="50">50분</option>
+<option value="60">60분</option>
+</select>
+
+<div class="timer" id="timer">25:00</div>
+
+<button class="btn green" onclick="startTimer()">▶ 시작</button>
+<button class="btn orange" onclick="pauseTimer()">⏸ 일시정지</button>
+<button class="btn pink" onclick="resetTimer()">🔄 초기화</button>
+
+</div>
+
+<div class="grid">
+
+<div class="card center">
+<h2>📊 오늘 공부</h2>
+<div class="big-number" id="studyTotal">0분</div>
+</div>
+
+<div class="card center">
+<h2>⭐ 공부 XP</h2>
+<div class="big-number" id="studyXP">0</div>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- 독서 -->
+
+<section id="books" class="screen">
+
+<h1>📚 독서 기록</h1>
+
+<div class="card">
+
+<input id="bookTitle" placeholder="책 제목">
+<input id="bookPages" type="number" placeholder="읽은 쪽수">
+
+<button class="btn primary" onclick="addBook()">📖 기록</button>
+
+</div>
+
+<div class="card">
+<div id="bookList" class="list"></div>
+</div>
+
+</section>
+
+
+<!-- 퀴즈 -->
+
+<section id="quiz" class="screen">
+
+<h1>🧠 공부 놀이터</h1>
+
+<div class="card center">
+
+<h2 id="question"></h2>
+
+<div id="answers"></div>
+
+<p id="quizResult"></p>
+
+<button class="btn purple" onclick="newQuiz()">🔄 새 문제</button>
+
+</div>
+
+</section>
+
+
+<!-- 집안일 -->
+
+<section id="chores" class="screen">
+
+<h1>🧹 집안일 → 용돈</h1>
+
+<div class="card">
+
+<h2>👩 부모님이 등록</h2>
+
+<input id="choreName" placeholder="예: 방 청소">
+<input id="choreReward" type="number" placeholder="몇 원을 줄까요?">
+
+<button class="btn orange" onclick="addChore()">➕ 집안일 등록</button>
+
+</div>
+
+<div class="card">
+
+<h2>🧹 집안일 목록</h2>
+
+<div id="choreList" class="list"></div>
+
+</div>
+
+</section>
+
+
+<!-- 용돈 -->
+
+<section id="money" class="screen">
+
+<h1>💰 용돈 지갑</h1>
+
+<div class="grid">
+
+<div class="card center">
+<h2>현재 잔액</h2>
+<div class="big-number"><span id="moneyBig">0</span>원</div>
+</div>
+
+<div class="card center">
+<h2>직접 기록</h2>
+
+<input id="manualMoney" type="number" placeholder="금액">
+<input id="manualReason" placeholder="이유">
+
+<button class="btn green" onclick="addMoney()">💰 받은 돈</button>
+<button class="btn pink" onclick="spendMoney()">💸 사용한 돈</button>
+
+</div>
+
+</div>
+
+<div class="card">
+<h2>📜 거래 기록</h2>
+<div id="moneyList" class="list"></div>
+</div>
+
+</section>
+
+
+<!-- 설정 -->
+
+<section id="settings" class="screen">
+
+<h1>⚙️ 설정</h1>
+
+<div class="card">
+
+<h2>💾 데이터 관리</h2>
+
+<button class="btn primary" onclick="backupData()">💾 백업하기</button>
+<button class="btn green" onclick="restoreData()">📂 복원하기</button>
+
+<hr>
+
+<button class="btn red" onclick="resetData()">🗑️ 전체 데이터 초기화</button>
+
+</div>
+
+</section>
+
+</main>
+</div>
+
+
+<script>
+
+/* ================================
+   데이터
+================================ */
+
+const defaultData={
+  xp:0,
+  money:0,
+  avatar:{
+    hair:"brown",
+    body:"blue",
+    bag:true,
+    accessory:"⭐"
+  },
+  schedules:[],
+  homework:[],
+  supplies:[],
+  books:[],
+  chores:[],
+  moneyLog:[],
+  studySeconds:0,
+  studyXP:0
+};
+
+let data;
+
+try{
+  data=JSON.parse(
+    localStorage.getItem("kidSuperAssistant")
+  ) || structuredClone(defaultData);
+}catch{
+  data=structuredClone(defaultData);
+}
+
+let avatar={...data.avatar};
+
+function save(){
+  data.avatar={...avatar};
+
+  localStorage.setItem(
+    "kidSuperAssistant",
+    JSON.stringify(data)
+  );
+
+  update();
+}
+
+
+/* ================================
+   화면
+================================ */
+
+function show(id){
+
+  document.querySelectorAll(".screen")
+    .forEach(x=>x.classList.remove("active"));
+
+  document.getElementById(id)
+    .classList.add("active");
+
+  renderAll();
+}
+
+
+/* ================================
+   XP
+================================ */
+
+function level(){
+  return Math.floor(data.xp/100)+1;
+}
+
+function xp(amount){
+
+  const old=level();
+
+  data.xp+=amount;
+
+  save();
+
+  if(level()>old){
+    alert(
+      `🎉 레벨 업!\nLv.${old} → Lv.${level()}`
+    );
+  }
+}
+
+
+/* ================================
+   상단
+================================ */
+
+function update(){
+
+  document.getElementById("level").textContent=level();
+  document.getElementById("xp").textContent=data.xp;
+
+  document.getElementById("money").textContent=
+    data.money.toLocaleString();
+
+  document.getElementById("moneyBig").textContent=
+    data.money.toLocaleString();
+
+  document.getElementById("homeMoney").textContent=
+    data.money.toLocaleString();
+
+  const mins=Math.floor(data.studySeconds/60);
+
+  document.getElementById("studyTotal").textContent=
+    mins+"분";
+
+  document.getElementById("homeStudy").textContent=
+    mins+"분";
+
+  document.getElementById("studyXP").textContent=
+    data.studyXP;
+}
+
+
+/* ================================
+   아바타
+================================ */
+
+function setAvatar(type,value){
+
+  avatar[type]=value;
+  renderAvatar();
+
+}
+
+function avatarHTML(){
+
+  const hair=
+    avatar.hair==="brown"
+    ? ""
+    : avatar.hair;
+
+  return `
+  <div class="avatar">
+
+    <div class="hair ${hair}"></div>
+
+    <div class="face">
+      <div class="eye l"></div>
+      <div class="eye r"></div>
+      <div class="mouth"></div>
+    </div>
+
+    <div class="body ${avatar.body}"></div>
+
+    <div class="shoes">
+      <div class="shoe"></div>
+      <div class="shoe"></div>
+    </div>
+
+    ${avatar.bag?'<div class="bag"></div>':''}
+
+    ${
+      avatar.accessory
+      ? `<div class="accessory">${avatar.accessory}</div>`
+      :""
+    }
+
+  </div>`;
+}
+
+function renderAvatar(){
+
+  document.getElementById("avatarPreview").innerHTML=
+    avatarHTML();
+
+  document.getElementById("homeAvatar").innerHTML=
+    avatarHTML();
+}
+
+function saveAvatar(){
+
+  data.avatar={...avatar};
+
+  save();
+
+  alert("✨ 아바타가 저장됐어요!");
+
+}
+
+
+/* ================================
+   일정
+================================ */
+
+function addSchedule(){
+
+  const text=
+    document.getElementById("scheduleText").value.trim();
+
+  const time=
+    document.getElementById("scheduleTime").value;
+
+  if(!text){
+    alert("일정을 입력해주세요.");
+    return;
+  }
+
+  data.schedules.push({
+    text,time,done:false
+  });
+
+  document.getElementById("scheduleText").value="";
+  document.getElementById("scheduleTime").value="";
+
+  save();
+  renderSchedules();
+}
+
+function renderSchedules(){
+
+  const box=document.getElementById("scheduleList");
+
+  if(!data.schedules.length){
+    box.innerHTML="<p>일정이 없어요.</p>";
+  }else{
+    box.innerHTML=data.schedules.map((x,i)=>`
+      <div class="item">
+        <span class="${x.done?"done":""}">
+          ${x.time?x.time+" ":""}${x.text}
+        </span>
+
+        <span>
+          <button class="btn green"
+            onclick="completeSchedule(${i})">
+            ${x.done?"완료":"완료"}
+          </button>
+
+          <button class="btn red"
+            onclick="deleteSchedule(${i})">
+            삭제
+          </button>
+        </span>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("homeSchedule").innerHTML=
+    data.schedules.length
+    ? data.schedules.slice(0,5).map(x=>
+      `<p>${x.done?"✅":"⬜"} ${x.time||""} ${x.text}</p>`
+    ).join("")
+    : "<p>오늘 일정이 없어요.</p>";
+}
+
+function completeSchedule(i){
+
+  if(!data.schedules[i].done){
+    data.schedules[i].done=true;
+    xp(5);
+  }
+
+  save();
+  renderSchedules();
+}
+
+function deleteSchedule(i){
+
+  data.schedules.splice(i,1);
+  save();
+  renderSchedules();
+
+}
+
+
+/* ================================
+   숙제
+================================ */
+
+function addHomework(){
+
+  const text=
+    document.getElementById("homeworkText")
+      .value.trim();
+
+  if(!text){
+    alert("숙제를 입력해주세요.");
+    return;
+  }
+
+  data.homework.push({
+    text,done:false
+  });
+
+  document.getElementById("homeworkText").value="";
+
+  save();
+  renderHomework();
+}
+
+function renderHomework(){
+
+  const box=document.getElementById("homeworkList");
+
+  box.innerHTML=data.homework.length
+  ? data.homework.map((x,i)=>`
+    <div class="item">
+
+      <span class="${x.done?"done":""}">
+        📝 ${x.text}
+      </span>
+
+      <span>
+        <button class="btn green"
+          onclick="completeHomework(${i})">
+          ${x.done?"완료":"완료"}
+        </button>
+
+        <button class="btn red"
+          onclick="deleteHomework(${i})">
+          삭제
+        </button>
+      </span>
+
+    </div>
+  `).join("")
+  : "<p>숙제가 없어요.</p>";
+}
+
+function completeHomework(i){
+
+  if(!data.homework[i].done){
+    data.homework[i].done=true;
+    xp(10);
+  }
+
+  save();
+  renderHomework();
+}
+
+function deleteHomework(i){
+
+  data.homework.splice(i,1);
+  save();
+  renderHomework();
+
+}
+
+
+/* ================================
+   준비물
+================================ */
+
+function addSupply(){
+
+  const text=
+    document.getElementById("supplyText")
+      .value.trim();
+
+  if(!text){
+    alert("준비물을 입력해주세요.");
+    return;
+  }
+
+  data.supplies.push({
+    text,done:false
+  });
+
+  document.getElementById("supplyText").value="";
+
+  save();
+  renderSupplies();
+}
+
+function renderSupplies(){
+
+  const box=document.getElementById("supplyList");
+
+  box.innerHTML=data.supplies.length
+  ? data.supplies.map((x,i)=>`
+    <div class="item">
+
+      <span class="${x.done?"done":""}">
+        🎒 ${x.text}
+      </span>
+
+      <span>
+        <button class="btn green"
+          onclick="completeSupply(${i})">
+          ${x.done?"준비 완료":"준비했어요"}
+        </button>
+
+        <button class="btn red"
+          onclick="deleteSupply(${i})">
+          삭제
+        </button>
+      </span>
+
+    </div>
+  `).join("")
+  : "<p>준비물이 없어요.</p>";
+}
+
+function completeSupply(i){
+
+  if(!data.supplies[i].done){
+    data.supplies[i].done=true;
+    xp(5);
+  }
+
+  save();
+  renderSupplies();
+}
+
+function deleteSupply(i){
+
+  data.supplies.splice(i,1);
+  save();
+  renderSupplies();
+
+}
+
+
+/* ================================
+   공부 타이머
+================================ */
+
+let timerSeconds=25*60;
+let timerInterval=null;
+let timerRunning=false;
+let selectedStudySeconds=25*60;
+
+function updateTimer(){
+
+  const m=
+    Math.floor(timerSeconds/60)
+      .toString().padStart(2,"0");
+
+  const s=
+    (timerSeconds%60)
+      .toString().padStart(2,"0");
+
+  document.getElementById("timer").textContent=
+    `${m}:${s}`;
+}
+
+document.getElementById("studyMinutes")
+  .addEventListener("change",function(){
+
+    if(timerRunning)return;
+
+    selectedStudySeconds=
+      Number(this.value)*60;
+
+    timerSeconds=selectedStudySeconds;
+
+    updateTimer();
+
+  });
+
+function startTimer(){
+
+  if(timerRunning)return;
+
+  timerRunning=true;
+
+  timerInterval=setInterval(()=>{
+
+    if(timerSeconds<=0){
+
+      finishTimer();
+      return;
+
+    }
+
+    timerSeconds--;
+    updateTimer();
+
+  },1000);
+}
+
+function pauseTimer(){
+
+  timerRunning=false;
+  clearInterval(timerInterval);
+
+}
+
+function resetTimer(){
+
+  pauseTimer();
+
+  timerSeconds=
+    selectedStudySeconds;
+
+  updateTimer();
+
+}
+
+function finishTimer(){
+
+  pauseTimer();
+
+  const minutes=
+    Math.floor(selectedStudySeconds/60);
+
+  data.studySeconds+=selectedStudySeconds;
+
+  const earned=minutes;
+
+  data.studyXP+=earned;
+
+  data.xp+=earned;
+
+  save();
+
+  alert(
+    `🎉 공부 완료!\n\n`+
+    `⏱️ ${minutes}분\n`+
+    `⭐ XP +${earned}`
+  );
+
+  resetTimer();
+
+}
+
+
+/* ================================
+   독서
+================================ */
+
+function addBook(){
+
+  const title=
+    document.getElementById("bookTitle")
+      .value.trim();
+
+  const pages=
+    Number(
+      document.getElementById("bookPages").value
+    );
+
+  if(!title){
+    alert("책 제목을 입력해주세요.");
+    return;
+  }
+
+  data.books.push({
+    title,
+    pages:pages||0,
+    date:new Date().toLocaleDateString()
+  });
+
+  const earned=
+    Math.max(5,Math.floor((pages||0)/2));
+
+  data.xp+=earned;
+
+  document.getElementById("bookTitle").value="";
+  document.getElementById("bookPages").value="";
+
+  save();
+  renderBooks();
+
+  alert(`📚 독서 기록!\n⭐ XP +${earned}`);
+
+}
+
+function renderBooks(){
+
+  const box=document.getElementById("bookList");
+
+  box.innerHTML=data.books.length
+  ? data.books.map((x,i)=>`
+    <div class="item">
+      <span>
+        📚 ${x.title}
+        <br>
+        <span class="small">
+          ${x.date} · ${x.pages}쪽
+        </span>
+      </span>
+
+      <button class="btn red"
+        onclick="deleteBook(${i})">
+        삭제
+      </button>
+    </div>
+  `).join("")
+  : "<p>아직 독서 기록이 없어요.</p>";
+
+}
+
+function deleteBook(i){
+
+  data.books.splice(i,1);
+  save();
+  renderBooks();
+
+}
+
+
+/* ================================
+   퀴즈
+================================ */
+
+let answer=0;
+
+function newQuiz(){
+
+  const a=
+    Math.floor(Math.random()*20)+1;
+
+  const b=
+    Math.floor(Math.random()*20)+1;
+
+  answer=a+b;
+
+  document.getElementById("question").textContent=
+    `🧠 ${a} + ${b} = ?`;
+
+  let arr=[answer];
+
+  while(arr.length<4){
+
+    const n=
+      answer+
+      Math.floor(Math.random()*11)-5;
+
+    if(n>=0&&!arr.includes(n)){
+      arr.push(n);
+    }
+  }
+
+  arr.sort(()=>Math.random()-.5);
+
+  document.getElementById("answers").innerHTML=
+    arr.map(n=>`
+      <button
+        class="quiz-answer"
+        onclick="answerQuiz(${n})">
+        ${n}
+      </button>
+    `).join("");
+
+  document.getElementById("quizResult").textContent="";
+}
+
+function answerQuiz(n){
+
+  if(n===answer){
+
+    document.getElementById("quizResult").textContent=
+      "🎉 정답! ⭐ XP +5";
+
+    xp(5);
+
+  }else{
+
+    document.getElementById("quizResult").textContent=
+      "😊 다시 생각해봐요!";
+
+  }
+
+}
+
+
+/* ================================
+   집안일
+================================ */
+
+function addChore(){
+
+  const name=
+    document.getElementById("choreName")
+      .value.trim();
+
+  const reward=
+    Number(
+      document.getElementById("choreReward").value
+    );
+
+  if(!name||reward<=0){
+
+    alert("집안일과 금액을 입력해주세요.");
+    return;
+
+  }
+
+  data.chores.push({
+    name,
+    reward,
+    status:"todo"
+  });
+
+  document.getElementById("choreName").value="";
+  document.getElementById("choreReward").value="";
+
+  save();
+  renderChores();
+
+}
+
+function renderChores(){
+
+  const box=document.getElementById("choreList");
+
+  box.innerHTML=data.chores.length
+  ? data.chores.map((x,i)=>`
+
+    <div class="item">
+
+      <span>
+
+        🧹 <strong>${x.name}</strong>
+
+        <br>
+
+        💰 ${x.reward.toLocaleString()}원
+
+        <br>
+
+        ${
+          x.status==="todo"
+          ?"⬜ 해야 할 일"
+          :x.status==="waiting"
+          ?"🕐 부모님 승인 대기"
+          :"✅ 승인 완료"
+        }
+
+      </span>
+
+      <span>
+
+        ${
+          x.status==="todo"
+          ? `<button class="btn orange"
+              onclick="requestChore(${i})">
+              완료했어요
+            </button>`
+          :x.status==="waiting"
+          ? `<button class="btn green"
+              onclick="approveChore(${i})">
+              👩 승인
+            </button>`
+          :"💰 지급 완료"
+        }
+
+        <button class="btn red"
+          onclick="deleteChore(${i})">
+          삭제
+        </button>
+
+      </span>
+
+    </div>
+
+  `).join("")
+  : "<p>등록된 집안일이 없어요.</p>";
+
+}
+
+function requestChore(i){
+
+  data.chores[i].status="waiting";
+
+  save();
+  renderChores();
+
+  alert("🕐 완료 요청을 보냈어요.\n부모님이 확인해주세요.");
+
+}
+
+function approveChore(i){
+
+  const c=data.chores[i];
+
+  if(c.status!=="waiting")return;
+
+  c.status="approved";
+
+  data.money+=c.reward;
+
+  data.moneyLog.push({
+    type:"in",
+    amount:c.reward,
+    reason:"집안일: "+c.name,
+    date:new Date().toLocaleString()
+  });
+
+  data.xp+=10;
+
+  save();
+  renderChores();
+  renderMoney();
+
+  alert(
+    `🎉 승인 완료!\n`+
+    `💰 +${c.reward.toLocaleString()}원\n`+
+    `⭐ XP +10`
+  );
+
+}
+
+function deleteChore(i){
+
+  data.chores.splice(i,1);
+  save();
+  renderChores();
+
+}
+
+
+/* ================================
+   용돈
+================================ */
+
+function addMoney(){
+
+  const amount=
+    Number(
+      document.getElementById("manualMoney").value
+    );
+
+  const reason=
+    document.getElementById("manualReason")
+      .value.trim() || "용돈 받음";
+
+  if(amount<=0){
+    alert("금액을 입력해주세요.");
+    return;
+  }
+
+  data.money+=amount;
+
+  data.moneyLog.push({
+    type:"in",
+    amount,
+    reason,
+    date:new Date().toLocaleString()
+  });
+
+  document.getElementById("manualMoney").value="";
+  document.getElementById("manualReason").value="";
+
+  save();
+  renderMoney();
+
+}
+
+function spendMoney(){
+
+  const amount=
+    Number(
+      document.getElementById("manualMoney").value
+    );
+
+  const reason=
+    document.getElementById("manualReason")
+      .value.trim() || "용돈 사용";
+
+  if(amount<=0){
+    alert("금액을 입력해주세요.");
+    return;
+  }
+
+  if(amount>data.money){
+    alert("💰 잔액이 부족해요.");
+    return;
+  }
+
+  data.money-=amount;
+
+  data.moneyLog.push({
+    type:"out",
+    amount,
+    reason,
+    date:new Date().toLocaleString()
+  });
+
+  document.getElementById("manualMoney").value="";
+  document.getElementById("manualReason").value="";
+
+  save();
+  renderMoney();
+
+}
+
+function renderMoney(){
+
+  document.getElementById("moneyBig").textContent=
+    data.money.toLocaleString();
+
+  document.getElementById("money").textContent=
+    data.money.toLocaleString();
+
+  document.getElementById("homeMoney").textContent=
+    data.money.toLocaleString();
+
+  const box=document.getElementById("moneyList");
+
+  box.innerHTML=data.moneyLog.length
+  ? data.moneyLog.slice().reverse().map((x,i)=>`
+
+    <div class="item">
+
+      <span>
+        ${x.type==="in"?"💰":"💸"} ${x.reason}
+        <br>
+        <span class="small">${x.date}</span>
+      </span>
+
+      <strong>
+        ${x.type==="in"?"+":"-"}
+        ${x.amount.toLocaleString()}원
+      </strong>
+
+    </div>
+
+  `).join("")
+  : "<p>거래 기록이 없어요.</p>";
+
+}
+
+
+/* ================================
+   백업 / 복원
+================================ */
+
+function backupData(){
+
+  const blob=new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download="꼬마슈퍼비서_백업.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+}
+
+function restoreData(){
+
+  const input=document.createElement("input");
+
+  input.type="file";
+  input.accept=".json";
+
+  input.onchange=()=>{
+
+    const file=input.files[0];
+
+    if(!file)return;
+
+    const reader=new FileReader();
+
+    reader.onload=()=>{
+
+      try{
+
+        const loaded=JSON.parse(reader.result);
+
+        if(!loaded.avatar||typeof loaded.money!=="number"){
+          throw new Error();
+        }
+
+        data=loaded;
+        avatar={...data.avatar};
+
+        save();
+        renderAll();
+
+        alert("📂 데이터를 복원했어요!");
+
+      }catch{
+
+        alert("❌ 올바른 백업 파일이 아니에요.");
+
+      }
+
+    };
+
+    reader.readAsText(file);
+
+  };
+
+  input.click();
+
+}
+
+
+/* ================================
+   전체 초기화
+================================ */
+
+function resetData(){
+
+  if(!confirm(
+    "정말 모든 데이터를 삭제할까요?"
+  ))return;
+
+  localStorage.removeItem(
+    "kidSuperAssistant"
+  );
+
+  location.reload();
+
+}
+
+
+/* ================================
+   전체 렌더링
+================================ */
+
+function renderAll(){
+
+  update();
+  renderAvatar();
+  renderSchedules();
+  renderHomework();
+  renderSupplies();
+  renderBooks();
+  renderChores();
+  renderMoney();
+  updateTimer();
+
+}
+
+
+/* ================================
+   시작
+================================ */
+
+if(!data.moneyLog){
+  data.moneyLog=[];
+}
+
+if(!data.expenses){
+  data.expenses=[];
+}
+
+renderAll();
+newQuiz();
+
+</script>
+
+</body>
+</html>

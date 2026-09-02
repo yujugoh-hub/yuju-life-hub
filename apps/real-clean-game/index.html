@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>🧹 우리집 청소 챌린지</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  font-family:Arial,"Malgun Gothic",sans-serif;
+  background:#eef6ff;
+  color:#263238;
+}
+
+button,input,select{
+  font-family:inherit;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+#app{
+  max-width:900px;
+  margin:auto;
+  min-height:100vh;
+}
+
+header{
+  background:linear-gradient(135deg,#70a1ff,#8e7dff);
+  color:white;
+  padding:24px 20px;
+  border-radius:0 0 30px 30px;
+}
+
+.title{
+  font-size:30px;
+  font-weight:bold;
+}
+
+.subtitle{
+  margin-top:7px;
+  opacity:.9;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:18px;
+}
+
+.stat{
+  background:#ffffff25;
+  padding:12px;
+  border-radius:16px;
+  text-align:center;
+}
+
+.stat b{
+  display:block;
+  font-size:20px;
+  margin-top:4px;
+}
+
+.xpbox{
+  margin-top:14px;
+}
+
+.xpbar{
+  height:15px;
+  background:#ffffff40;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.xpfill{
+  height:100%;
+  width:0%;
+  background:white;
+  transition:.4s;
+}
+
+main{
+  padding:20px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:24px;
+  margin-bottom:18px;
+  box-shadow:0 5px 18px #00000010;
+}
+
+h1{
+  margin-top:0;
+  font-size:26px;
+}
+
+h2{
+  margin-top:0;
+}
+
+input,select{
+  width:100%;
+  padding:14px;
+  border:2px solid #dfe6ee;
+  border-radius:15px;
+  font-size:16px;
+  margin-bottom:10px;
+  background:white;
+}
+
+.primary{
+  background:#6c8cff;
+  color:white;
+  padding:14px 18px;
+  border-radius:16px;
+  font-size:17px;
+  font-weight:bold;
+  width:100%;
+}
+
+.secondary{
+  background:#eef2ff;
+  color:#4054a5;
+  padding:12px 16px;
+  border-radius:14px;
+  font-weight:bold;
+}
+
+.danger{
+  background:#ffe9e9;
+  color:#d33;
+  padding:10px 13px;
+  border-radius:12px;
+}
+
+.mission{
+  background:#f7f9ff;
+  padding:17px;
+  border-radius:20px;
+  margin:10px 0;
+  border-left:6px solid #7189ff;
+}
+
+.mission.done{
+  opacity:.65;
+  border-left-color:#62c58b;
+}
+
+.mission-title{
+  font-size:19px;
+  font-weight:bold;
+}
+
+.mission-info{
+  margin:7px 0;
+  color:#657080;
+}
+
+.mission-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.reward{
+  display:inline-block;
+  background:#fff4d6;
+  padding:5px 9px;
+  border-radius:10px;
+  font-size:14px;
+}
+
+.empty{
+  text-align:center;
+  padding:30px 10px;
+  color:#7c8794;
+}
+
+.shop{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.shop-item{
+  background:#f7f9ff;
+  padding:18px;
+  border-radius:20px;
+  text-align:center;
+}
+
+.shop-emoji{
+  font-size:42px;
+}
+
+.shop-name{
+  font-weight:bold;
+  margin:8px 0;
+}
+
+.coin-price{
+  color:#e29b00;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.tip{
+  background:#effaf4;
+  padding:15px;
+  border-radius:17px;
+  line-height:1.6;
+}
+
+.today{
+  font-size:14px;
+  color:#718096;
+}
+
+@media(max-width:600px){
+  .stats{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .stat{
+    font-size:13px;
+  }
+
+  .stat b{
+    font-size:17px;
+  }
+
+  .title{
+    font-size:25px;
+  }
+
+  .shop{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+<style>
+.yuju-home-button {
+    display: block;
+    width: fit-content;
+    margin: 12px auto 18px auto;
+    padding: 9px 16px;
+    border: 2px solid rgba(0,0,0,.10);
+    border-radius: 14px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(0,0,0,.12);
+    font-family: Arial, sans-serif;
+    position: relative;
+    z-index: 9999;
+}
+
+.yuju-home-button:hover {
+    transform: translateY(-1px);
+}
+
+.yuju-home-button:active {
+    transform: scale(.97);
+}
+</style>
+
+<a class="yuju-home-button" href="../../index.html">&#x1F3E0; 메인으로</a>
+
+
+<div id="app">
+
+<header>
+  <div class="title">🧹 우리집 청소 챌린지</div>
+  <div class="subtitle">진짜 집을 깨끗하게 만들고 레벨업!</div>
+
+  <div class="stats">
+    <div class="stat">
+      ⭐ 레벨
+      <b id="level">1</b>
+    </div>
+
+    <div class="stat">
+      ✨ XP
+      <b id="xp">0</b>
+    </div>
+
+    <div class="stat">
+      💰 코인
+      <b id="coins">0</b>
+    </div>
+  </div>
+
+  <div class="xpbox">
+    <div>다음 레벨까지</div>
+    <div class="xpbar">
+      <div class="xpfill" id="xpFill"></div>
+    </div>
+  </div>
+</header>
+
+
+<main>
+
+<!-- 미션 추가 -->
+<div class="card">
+
+  <h2>➕ 실제 청소 미션 추가</h2>
+
+  <input
+    id="missionName"
+    placeholder="예: 책상 위를 깨끗하게 정리하기"
+  >
+
+  <select id="missionDifficulty">
+    <option value="easy">🟢 쉬움 +20 XP / +20 코인</option>
+    <option value="normal">🟡 보통 +30 XP / +30 코인</option>
+    <option value="hard">🔴 어려움 +50 XP / +50 코인</option>
+  </select>
+
+  <button class="primary" onclick="addMission()">
+    🧹 청소 미션 만들기
+  </button>
+
+</div>
+
+
+<!-- 오늘의 미션 -->
+<div class="card">
+
+  <h2>📋 오늘의 청소 미션</h2>
+
+  <div class="today" id="today"></div>
+
+  <div id="missionList"></div>
+
+</div>
+
+
+<!-- 청소 팁 -->
+<div class="card">
+
+  <h2>💡 청소 팁</h2>
+
+  <div class="tip">
+    🧺 한 번에 집 전체를 청소하지 않아도 괜찮아요.<br>
+    🎯 작은 곳 하나를 깨끗하게 만드는 것부터 시작하세요.<br>
+    ⏱️ 끝나면 완료 버튼을 눌러 보상을 받아요.
+  </div>
+
+</div>
+
+
+<!-- 보상 상점 -->
+<div class="card">
+
+  <h2>🏆 보상 상점</h2>
+
+  <p>청소해서 모은 코인으로 실제 보상을 교환할 수 있어요.</p>
+
+  <div class="shop">
+
+    <div class="shop-item">
+      <div class="shop-emoji">🍦</div>
+      <div class="shop-name">아이스크림</div>
+      <div class="coin-price">100 코인</div>
+      <button class="secondary" onclick="buyReward('아이스크림',100)">
+        교환
+      </button>
+    </div>
+
+    <div class="shop-item">
+      <div class="shop-emoji">🎮</div>
+      <div class="shop-name">게임 20분</div>
+      <div class="coin-price">200 코인</div>
+      <button class="secondary" onclick="buyReward('게임 20분',200)">
+        교환
+      </button>
+    </div>
+
+    <div class="shop-item">
+      <div class="shop-emoji">📺</div>
+      <div class="shop-name">TV 30분</div>
+      <div class="coin-price">250 코인</div>
+      <button class="secondary" onclick="buyReward('TV 30분',250)">
+        교환
+      </button>
+    </div>
+
+    <div class="shop-item">
+      <div class="shop-emoji">⭐</div>
+      <div class="shop-name">특별 보상</div>
+      <div class="coin-price">500 코인</div>
+      <button class="secondary" onclick="buyReward('특별 보상',500)">
+        교환
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- 초기화 -->
+<div class="card">
+
+  <h2>⚙️ 게임 관리</h2>
+
+  <button class="danger" onclick="resetGame()">
+    게임 데이터 초기화
+  </button>
+
+</div>
+
+</main>
+
+</div>
+
+
+<script>
+
+let data = JSON.parse(
+  localStorage.getItem("realCleanGame")
+) || {
+  xp:0,
+  coins:0,
+  missions:[],
+  rewards:[]
+};
+
+
+const difficulty = {
+
+  easy:{
+    xp:20,
+    coins:20
+  },
+
+  normal:{
+    xp:30,
+    coins:30
+  },
+
+  hard:{
+    xp:50,
+    coins:50
+  }
+
+};
+
+
+function save(){
+
+  localStorage.setItem(
+    "realCleanGame",
+    JSON.stringify(data)
+  );
+
+}
+
+
+function level(){
+
+  return Math.floor(data.xp / 100) + 1;
+
+}
+
+
+function updateStats(){
+
+  document.getElementById("level").textContent =
+    level();
+
+  document.getElementById("xp").textContent =
+    data.xp;
+
+  document.getElementById("coins").textContent =
+    data.coins;
+
+  let current = data.xp % 100;
+
+  document.getElementById("xpFill").style.width =
+    current + "%";
+
+}
+
+
+function addMission(){
+
+  const input =
+    document.getElementById("missionName");
+
+  const name =
+    input.value.trim();
+
+  if(!name){
+
+    alert("청소할 일을 입력해주세요!");
+
+    input.focus();
+
+    return;
+
+  }
+
+
+  const diff =
+    document.getElementById("missionDifficulty").value;
+
+  data.missions.unshift({
+
+    id:Date.now(),
+
+    name:name,
+
+    difficulty:diff,
+
+    done:false,
+
+    created:new Date().toLocaleDateString("ko-KR")
+
+  });
+
+
+  input.value="";
+
+  save();
+
+  render();
+
+  alert("🧹 청소 미션이 추가됐어요!");
+
+}
+
+
+function completeMission(id){
+
+  const mission =
+    data.missions.find(x=>x.id===id);
+
+  if(!mission || mission.done){
+
+    return;
+
+  }
+
+
+  const reward =
+    difficulty[mission.difficulty];
+
+
+  const ok =
+    confirm(
+      "실제로 청소를 끝냈나요?\n\n" +
+      mission.name +
+      "\n\n완료하면 +" +
+      reward.xp +
+      " XP / +" +
+      reward.coins +
+      " 코인을 받아요."
+    );
+
+
+  if(!ok){
+
+    return;
+
+  }
+
+
+  mission.done=true;
+
+  data.xp += reward.xp;
+
+  data.coins += reward.coins;
+
+
+  save();
+
+  render();
+
+
+  alert(
+    "🎉 청소 완료!\n\n" +
+    "+" + reward.xp + " XP\n" +
+    "+" + reward.coins + " 코인\n\n" +
+    "현재 레벨: " + level()
+  );
+
+}
+
+
+function deleteMission(id){
+
+  const ok =
+    confirm("이 미션을 삭제할까요?");
+
+  if(!ok){
+
+    return;
+
+  }
+
+
+  data.missions =
+    data.missions.filter(x=>x.id!==id);
+
+  save();
+
+  render();
+
+}
+
+
+function renderMissions(){
+
+  const box =
+    document.getElementById("missionList");
+
+
+  if(data.missions.length===0){
+
+    box.innerHTML = `
+      <div class="empty">
+        아직 청소 미션이 없어요.<br>
+        위에서 첫 번째 미션을 만들어보세요!
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    data.missions.map(m=>{
+
+      const r =
+        difficulty[m.difficulty];
+
+      const difficultyName =
+        m.difficulty==="easy"
+        ? "🟢 쉬움"
+        : m.difficulty==="normal"
+        ? "🟡 보통"
+        : "🔴 어려움";
+
+
+      return `
+
+      <div class="mission ${m.done ? "done" : ""}">
+
+        <div class="mission-title">
+          ${m.done ? "✅ " : "⬜ "}
+          ${escapeHTML(m.name)}
+        </div>
+
+        <div class="mission-info">
+          ${difficultyName}
+          <br>
+          <span class="reward">
+            ✨ +${r.xp} XP
+          </span>
+
+          <span class="reward">
+            💰 +${r.coins} 코인
+          </span>
+        </div>
+
+        <div class="mission-actions">
+
+          ${
+            m.done
+            ? `<button class="secondary" disabled>
+                 청소 완료!
+               </button>`
+            : `<button
+                 class="primary"
+                 style="width:auto"
+                 onclick="completeMission(${m.id})">
+                 🧹 실제 청소 완료
+               </button>`
+          }
+
+          <button
+            class="danger"
+            onclick="deleteMission(${m.id})">
+            삭제
+          </button>
+
+        </div>
+
+      </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+function escapeHTML(text){
+
+  return text
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function buyReward(name,price){
+
+  if(data.coins < price){
+
+    alert(
+      "💰 코인이 부족해요!\n\n" +
+      "필요: " + price + " 코인\n" +
+      "현재: " + data.coins + " 코인"
+    );
+
+    return;
+
+  }
+
+
+  const ok =
+    confirm(
+      name +
+      " 보상을 " +
+      price +
+      " 코인으로 교환할까요?"
+    );
+
+
+  if(!ok){
+
+    return;
+
+  }
+
+
+  data.coins -= price;
+
+
+  data.rewards.unshift({
+
+    name:name,
+
+    price:price,
+
+    date:new Date().toLocaleString("ko-KR")
+
+  });
+
+
+  save();
+
+  updateStats();
+
+
+  alert(
+    "🏆 보상 교환 완료!\n\n" +
+    name +
+    "\n\n" +
+    "실제 보상은 부모님과 약속한 뒤 사용하세요."
+  );
+
+}
+
+
+function resetGame(){
+
+  const ok =
+    confirm(
+      "정말 모든 게임 데이터를 삭제할까요?"
+    );
+
+  if(!ok){
+
+    return;
+
+  }
+
+
+  localStorage.removeItem("realCleanGame");
+
+  data={
+    xp:0,
+    coins:0,
+    missions:[],
+    rewards:[]
+  };
+
+  render();
+
+  alert("게임이 초기화됐어요.");
+
+}
+
+
+function render(){
+
+  updateStats();
+
+  renderMissions();
+
+  document.getElementById("today").textContent =
+    "오늘: " +
+    new Date().toLocaleDateString("ko-KR");
+
+}
+
+
+render();
+
+</script>
+
+</body>
+</html>

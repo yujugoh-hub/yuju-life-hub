@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>💰 용돈 모험가 V2</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:"Malgun Gothic",sans-serif;
+ background:linear-gradient(135deg,#fff5c7,#dff5ff,#f4e4ff);
+ color:#333;
+ min-height:100vh;
+}
+
+button,input{
+ font-family:inherit;
+}
+
+button{
+ cursor:pointer;
+}
+
+header{
+ background:white;
+ padding:18px;
+ text-align:center;
+ box-shadow:0 3px 15px #0002;
+ position:sticky;
+ top:0;
+ z-index:10;
+}
+
+header h1{
+ margin:0;
+ font-size:28px;
+}
+
+header p{
+ margin:5px 0 0;
+ color:#888;
+}
+
+.container{
+ max-width:950px;
+ margin:auto;
+ padding:18px 14px 50px;
+}
+
+.screen{
+ display:none;
+ animation:show .25s ease;
+}
+
+.screen.active{
+ display:block;
+}
+
+@keyframes show{
+ from{opacity:0;transform:translateY(8px)}
+ to{opacity:1;transform:translateY(0)}
+}
+
+.card{
+ background:white;
+ border-radius:25px;
+ padding:20px;
+ margin-bottom:15px;
+ box-shadow:0 6px 20px #0001;
+}
+
+.hero{
+ background:linear-gradient(135deg,#7767ff,#a58cff);
+ color:white;
+ text-align:center;
+ border-radius:28px;
+ padding:25px;
+ box-shadow:0 8px 25px #0002;
+}
+
+.hero .character{
+ font-size:80px;
+ animation:bounce 2s infinite;
+}
+
+@keyframes bounce{
+ 0%,100%{transform:translateY(0)}
+ 50%{transform:translateY(-8px)}
+}
+
+.hero h2{
+ margin:5px 0;
+}
+
+.level{
+ font-weight:bold;
+ font-size:18px;
+}
+
+.xpbar{
+ height:15px;
+ background:#ffffff55;
+ border-radius:20px;
+ overflow:hidden;
+ margin-top:10px;
+}
+
+.xpfill{
+ height:100%;
+ background:#ffe66d;
+ width:0%;
+ transition:.4s;
+}
+
+.balance{
+ text-align:center;
+}
+
+.balance small{
+ color:#888;
+}
+
+.balance h2{
+ font-size:40px;
+ margin:5px 0;
+ color:#5b4cff;
+}
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
+.stat{
+ background:#fafafa;
+ border-radius:18px;
+ padding:15px;
+ text-align:center;
+}
+
+.stat b{
+ display:block;
+ font-size:23px;
+ margin-top:5px;
+}
+
+.green{color:#159447}
+.red{color:#e34d4d}
+.blue{color:#6558ff}
+
+.nav{
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ gap:7px;
+ margin-bottom:15px;
+}
+
+.nav button{
+ border:0;
+ background:white;
+ border-radius:16px;
+ padding:12px 5px;
+ font-size:13px;
+ box-shadow:0 3px 10px #0001;
+}
+
+.nav button:hover{
+ transform:translateY(-2px);
+}
+
+h3{
+ margin-top:0;
+}
+
+.type-buttons{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+
+.type-buttons button{
+ padding:15px;
+ border:0;
+ border-radius:15px;
+ font-size:16px;
+ background:#eee;
+}
+
+.type-buttons .selected.in{
+ background:#d9f8e5;
+ color:#168a48;
+ font-weight:bold;
+}
+
+.type-buttons .selected.out{
+ background:#ffe0e0;
+ color:#d33;
+ font-weight:bold;
+}
+
+input{
+ width:100%;
+ padding:14px;
+ margin-top:10px;
+ border:2px solid #eee;
+ border-radius:14px;
+ font-size:16px;
+ outline:none;
+}
+
+input:focus{
+ border-color:#8b7cff;
+}
+
+.mainbtn{
+ width:100%;
+ border:0;
+ padding:15px;
+ margin-top:12px;
+ border-radius:15px;
+ background:#6c5cff;
+ color:white;
+ font-size:17px;
+ font-weight:bold;
+}
+
+.record{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ padding:14px 0;
+ border-bottom:1px solid #eee;
+}
+
+.record:last-child{
+ border-bottom:0;
+}
+
+.recordIcon{
+ width:45px;
+ height:45px;
+ border-radius:14px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:22px;
+}
+
+.recordIcon.in{
+ background:#e0f8e9;
+}
+
+.recordIcon.out{
+ background:#ffe3e3;
+}
+
+.recordInfo{
+ flex:1;
+}
+
+.recordInfo b{
+ display:block;
+}
+
+.recordInfo small{
+ color:#999;
+}
+
+.recordAmount{
+ font-weight:bold;
+}
+
+.delete{
+ border:0;
+ background:#eee;
+ border-radius:9px;
+ padding:8px;
+}
+
+.goalBox{
+ text-align:center;
+}
+
+.goalAmount{
+ font-size:28px;
+ font-weight:bold;
+ color:#5e50e9;
+}
+
+.progress{
+ height:20px;
+ background:#eee;
+ border-radius:20px;
+ overflow:hidden;
+ margin:15px 0;
+}
+
+.progressFill{
+ height:100%;
+ width:0%;
+ background:linear-gradient(90deg,#ffcf4d,#ff8a65);
+ transition:.5s;
+}
+
+.goalInput{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+}
+
+.mission{
+ background:linear-gradient(135deg,#fff3a8,#ffd7ec);
+ border-radius:20px;
+ padding:20px;
+ text-align:center;
+}
+
+.mission .emoji{
+ font-size:50px;
+}
+
+.mission h2{
+ margin:5px;
+}
+
+.reward{
+ font-weight:bold;
+ color:#7954d9;
+}
+
+.shop{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
+.shopItem{
+ border:2px solid #eee;
+ border-radius:18px;
+ padding:15px 8px;
+ text-align:center;
+ background:white;
+}
+
+.shopItem .emoji{
+ font-size:42px;
+}
+
+.shopItem button{
+ border:0;
+ background:#6c5cff;
+ color:white;
+ border-radius:10px;
+ padding:8px 12px;
+ margin-top:7px;
+}
+
+.shopItem button:disabled{
+ background:#ccc;
+}
+
+.characterGrid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
+}
+
+.charChoice{
+ border:3px solid #eee;
+ background:white;
+ border-radius:20px;
+ padding:15px;
+ text-align:center;
+ font-size:40px;
+}
+
+.charChoice.selected{
+ border-color:#6c5cff;
+ background:#f1efff;
+}
+
+.charChoice span{
+ display:block;
+ font-size:13px;
+ margin-top:5px;
+}
+
+.detective{
+ text-align:center;
+}
+
+.category{
+ margin:12px 0;
+}
+
+.categoryTop{
+ display:flex;
+ justify-content:space-between;
+}
+
+.bar{
+ height:18px;
+ background:#eee;
+ border-radius:20px;
+ overflow:hidden;
+ margin-top:5px;
+}
+
+.bar div{
+ height:100%;
+ background:#7c6cff;
+ width:0;
+}
+
+.achievement{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ padding:13px;
+ border-radius:15px;
+ margin-bottom:8px;
+ background:#f5f5f5;
+}
+
+.achievement.done{
+ background:#fff1a8;
+}
+
+.achievement .aemoji{
+ font-size:30px;
+}
+
+.message{
+ text-align:center;
+ background:#fff;
+ border-radius:20px;
+ padding:15px;
+ margin-bottom:15px;
+ box-shadow:0 4px 15px #0001;
+ font-weight:bold;
+}
+
+.empty{
+ text-align:center;
+ padding:25px;
+ color:#aaa;
+}
+
+footer{
+ text-align:center;
+ color:#999;
+ padding:20px;
+}
+
+@media(max-width:650px){
+ .stats{
+  grid-template-columns:1fr 1fr 1fr;
+ }
+ .shop{
+  grid-template-columns:1fr 1fr;
+ }
+ .characterGrid{
+  grid-template-columns:1fr 1fr;
+ }
+ .nav button{
+  font-size:11px;
+  padding:10px 2px;
+ }
+ .hero .character{
+  font-size:65px;
+ }
+}
+</style>
+</head>
+
+<body>
+<style>
+.yuju-home-button {
+    display: block;
+    width: fit-content;
+    margin: 12px auto 18px auto;
+    padding: 9px 16px;
+    border: 2px solid rgba(0,0,0,.10);
+    border-radius: 14px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(0,0,0,.12);
+    font-family: Arial, sans-serif;
+    position: relative;
+    z-index: 9999;
+}
+
+.yuju-home-button:hover {
+    transform: translateY(-1px);
+}
+
+.yuju-home-button:active {
+    transform: scale(.97);
+}
+</style>
+
+<a class="yuju-home-button" href="../../index.html">&#x1F3E0; 메인으로</a>
+
+
+<header>
+ <h1>💰 용돈 모험가</h1>
+ <p>돈을 관리하고 레벨을 올려보자!</p>
+</header>
+
+<div class="container">
+
+<div id="message" class="message">
+ 🌱 용돈 모험을 시작해 보자!
+</div>
+
+<div class="nav">
+ <button onclick="showScreen('home')">🏠<br>홈</button>
+ <button onclick="showScreen('record')">💰<br>기록</button>
+ <button onclick="showScreen('goal')">🎯<br>목표</button>
+ <button onclick="showScreen('mission')">🎲<br>미션</button>
+ <button onclick="showScreen('shop')">🛍️<br>상점</button>
+</div>
+
+
+<!-- HOME -->
+
+<section id="home" class="screen active">
+
+ <div class="hero">
+   <div id="character" class="character">🐷</div>
+   <div class="level">Lv.<span id="level">1</span> 용돈 모험가</div>
+
+   <div class="xpbar">
+     <div id="xpfill" class="xpfill"></div>
+   </div>
+
+   <div>
+     ⭐ 경험치 <span id="xp">0</span> / <span id="nextxp">100</span>
+   </div>
+
+   <h2 id="characterName">나의 저금통</h2>
+ </div>
+
+ <div class="card balance">
+   <small>현재 잔액</small>
+   <h2 id="balance">0원</h2>
+ </div>
+
+ <div class="card stats">
+   <div class="stat">
+     💵 받은 돈
+     <b class="green" id="income">0원</b>
+   </div>
+
+   <div class="stat">
+     🛍️ 쓴 돈
+     <b class="red" id="expense">0원</b>
+   </div>
+
+   <div class="stat">
+     🪙 포인트
+     <b class="blue" id="coins">0</b>
+   </div>
+ </div>
+
+ <div class="card">
+   <h3>🐷 저금통</h3>
+   <div style="text-align:center;font-size:60px" id="bigPig">🐷</div>
+   <p style="text-align:center">
+     기록을 남기고 경험치를 모아 저금통을 성장시켜 보세요!
+   </p>
+ </div>
+
+</section>
+
+
+<!-- RECORD -->
+
+<section id="record" class="screen">
+
+ <div class="card">
+   <h3>💰 돈 기록하기</h3>
+
+   <div class="type-buttons">
+     <button id="incomeBtn"
+       class="selected in"
+       onclick="setType('income')">
+       💵 용돈 받기
+     </button>
+
+     <button id="expenseBtn"
+       class="out"
+       onclick="setType('expense')">
+       🛍️ 돈 쓰기
+     </button>
+   </div>
+
+   <input id="amount" type="number" min="1" placeholder="금액">
+   <input id="memo" type="text" placeholder="무엇을 했나요?">
+
+   <button class="mainbtn" onclick="addRecord()">
+     ✨ 기록하기
+   </button>
+ </div>
+
+ <div class="card">
+   <h3>📋 내 용돈 기록</h3>
+   <div id="records"></div>
+ </div>
+
+</section>
+
+
+<!-- GOAL -->
+
+<section id="goal" class="screen">
+
+ <div class="card goalBox">
+   <h3>🎯 나의 저축 목표</h3>
+
+   <div style="font-size:60px">🎁</div>
+
+   <div id="goalNameDisplay">
+     아직 목표가 없어요!
+   </div>
+
+   <div class="goalAmount">
+     <span id="goalSaved">0</span> /
+     <span id="goalAmount">0</span>원
+   </div>
+
+   <div class="progress">
+     <div id="goalProgress" class="progressFill"></div>
+   </div>
+
+   <div id="goalPercent">0%</div>
+ </div>
+
+ <div class="card">
+   <h3>✏️ 목표 만들기</h3>
+
+   <input id="goalName" placeholder="예: 갖고 싶은 장난감">
+   <input id="goalMoney" type="number" placeholder="목표 금액">
+
+   <button class="mainbtn" onclick="setGoal()">
+     🎯 목표 저장
+   </button>
+ </div>
+
+</section>
+
+
+<!-- MISSION -->
+
+<section id="mission" class="screen">
+
+ <div class="card mission">
+   <div class="emoji" id="missionEmoji">🎯</div>
+   <h2 id="missionTitle">오늘의 미션</h2>
+   <p id="missionText"></p>
+
+   <div class="reward">
+     ⭐ 보상 +<span id="missionReward">20</span> XP
+   </div>
+
+   <button id="missionButton" class="mainbtn"
+     onclick="completeMission()">
+     미션 완료!
+   </button>
+ </div>
+
+ <div class="card">
+   <h3>💡 미션이란?</h3>
+   <p>
+     작은 돈 관리 습관을 만들기 위한 특별한 도전이에요.
+   </p>
+ </div>
+
+</section>
+
+
+<!-- SHOP -->
+
+<section id="shop" class="screen">
+
+ <div class="card">
+   <h3>🛍️ 저금통 꾸미기 상점</h3>
+   <p>🪙 포인트: <b id="shopCoins">0</b></p>
+
+   <div class="shop" id="shopList"></div>
+ </div>
+
+ <div class="card">
+   <h3>🐾 캐릭터 선택</h3>
+
+   <div class="characterGrid">
+
+     <button class="charChoice selected" data-char="🐷"
+       onclick="chooseCharacter('🐷','돼지 저금통')">
+       🐷<span>돼지</span>
+     </button>
+
+     <button class="charChoice" data-char="🐰"
+       onclick="chooseCharacter('🐰','토끼 저금통')">
+       🐰<span>토끼</span>
+     </button>
+
+     <button class="charChoice" data-char="🐱"
+       onclick="chooseCharacter('🐱','고양이 저금통')">
+       🐱<span>고양이</span>
+     </button>
+
+     <button class="charChoice" data-char="🐻"
+       onclick="chooseCharacter('🐻','곰돌이 저금통')">
+       🐻<span>곰돌이</span>
+     </button>
+
+   </div>
+ </div>
+
+</section>
+
+
+<div class="card detective">
+ <h3>🔎 돈 탐정</h3>
+ <div id="detective"></div>
+</div>
+
+
+<div class="card">
+ <h3>🏆 업적</h3>
+ <div id="achievements"></div>
+</div>
+
+<footer>
+💰 용돈 모험가 V2 · 기록은 이 브라우저에 자동 저장됩니다.
+</footer>
+
+</div>
+
+
+<script>
+
+let data = JSON.parse(
+ localStorage.getItem("moneyAdventureV2") ||
+ '{"records":[],"xp":0,"coins":0,"level":1,"goal":{"name":"","amount":0},"character":"🐷","characterName":"돼지 저금통","missionDone":false,"items":[]}'
+);
+
+let currentType="income";
+
+const missions=[
+ {
+  emoji:"💰",
+  title:"작은 저축",
+  text:"오늘 1,000원 이상 저축해 보세요!",
+  reward:20
+ },
+ {
+  emoji:"📝",
+  title:"기록 습관",
+  text:"오늘의 돈 사용 내역을 기록해 보세요!",
+  reward:15
+ },
+ {
+  emoji:"🐷",
+  title:"저금통 챌린지",
+  text:"저축을 한 번 기록해 보세요!",
+  reward:25
+ },
+ {
+  emoji:"🔎",
+  title:"돈 탐정",
+  text:"내 돈 기록을 확인해 보세요!",
+  reward:10
+ }
+];
+
+let todayMission =
+ missions[new Date().getDate()%missions.length];
+
+
+const shopItems=[
+ {id:"ribbon",emoji:"🎀",name:"리본",cost:30},
+ {id:"hat",emoji:"👒",name:"모자",cost:50},
+ {id:"glasses",emoji:"🕶️",name:"선글라스",cost:70},
+ {id:"star",emoji:"⭐",name:"별 장식",cost:100},
+ {id:"rainbow",emoji:"🌈",name:"무지개",cost:120},
+ {id:"crown",emoji:"👑",name:"왕관",cost:200}
+];
+
+
+function save(){
+ localStorage.setItem(
+  "moneyAdventureV2",
+  JSON.stringify(data)
+ );
+}
+
+
+function money(n){
+ return Number(n).toLocaleString("ko-KR")+"원";
+}
+
+
+function showScreen(id){
+
+ document.querySelectorAll(".screen")
+ .forEach(s=>s.classList.remove("active"));
+
+ document.getElementById(id)
+ .classList.add("active");
+
+ window.scrollTo({
+  top:0,
+  behavior:"smooth"
+ });
+}
+
+
+function message(text){
+
+ const box=document.getElementById("message");
+
+ box.textContent=text;
+
+ setTimeout(()=>{
+  box.textContent="🌱 계속 용돈 모험을 해보자!";
+ },2500);
+}
+
+
+function setType(type){
+
+ currentType=type;
+
+ document.getElementById("incomeBtn")
+ .classList.remove("selected");
+
+ document.getElementById("expenseBtn")
+ .classList.remove("selected");
+
+ if(type==="income"){
+  document.getElementById("incomeBtn")
+  .classList.add("selected");
+ }else{
+  document.getElementById("expenseBtn")
+  .classList.add("selected");
+ }
+}
+
+
+function addXP(amount){
+
+ data.xp += amount;
+
+ let next = data.level*100;
+
+ while(data.xp >= next){
+
+  data.xp -= next;
+  data.level++;
+
+  data.coins += 20;
+
+  message(
+   "🎉 레벨 업! Lv."+data.level+
+   "이 되었어요! 🪙 +20"
+  );
+
+  next=data.level*100;
+ }
+
+ save();
+}
+
+
+function addRecord(){
+
+ const amount=Number(
+  document.getElementById("amount").value
+ );
+
+ const memo=document.getElementById("memo")
+ .value.trim();
+
+ if(!amount || amount<=0){
+  alert("금액을 입력해 주세요! 💰");
+  return;
+ }
+
+ if(!memo){
+  alert("내용을 입력해 주세요! 📝");
+  return;
+ }
+
+ data.records.unshift({
+  id:Date.now(),
+  type:currentType,
+  amount:amount,
+  memo:memo,
+  date:new Date().toLocaleString("ko-KR")
+ });
+
+ data.coins += currentType==="income" ? 5 : 2;
+
+ addXP(currentType==="income" ? 15 : 10);
+
+ document.getElementById("amount").value="";
+ document.getElementById("memo").value="";
+
+ if(currentType==="income"){
+  message("💵 용돈 기록 완료! +15 XP");
+ }else{
+  message("🛍️ 소비 기록 완료! +10 XP");
+ }
+
+ save();
+ render();
+}
+
+
+function deleteRecord(id){
+
+ if(!confirm("이 기록을 삭제할까요?"))return;
+
+ data.records=data.records.filter(r=>r.id!==id);
+
+ save();
+ render();
+
+ message("🗑️ 기록을 삭제했어요.");
+}
+
+
+function setGoal(){
+
+ const name=document.getElementById("goalName")
+ .value.trim();
+
+ const amount=Number(
+  document.getElementById("goalMoney").value
+ );
+
+ if(!name || !amount || amount<=0){
+  alert("목표 이름과 금액을 입력해 주세요!");
+  return;
+ }
+
+ data.goal={
+  name:name,
+  amount:amount
+ };
+
+ save();
+ render();
+
+ message("🎯 새로운 저축 목표가 생겼어요!");
+}
+
+
+function completeMission(){
+
+ if(data.missionDone){
+  alert("오늘의 미션은 이미 완료했어요! 😊");
+  return;
+ }
+
+ data.missionDone=true;
+
+ addXP(todayMission.reward);
+
+ data.coins += 10;
+
+ save();
+ render();
+
+ message(
+  "🎉 미션 성공! +"+todayMission.reward+
+  " XP +10🪙"
+ );
+}
+
+
+function chooseCharacter(char,name){
+
+ data.character=char;
+ data.characterName=name;
+
+ save();
+ render();
+
+ message("🐾 "+name+"을 선택했어요!");
+}
+
+
+function buyItem(item){
+
+ if(data.items.includes(item.id)){
+  message("이미 가지고 있는 아이템이에요!");
+  return;
+ }
+
+ if(data.coins<item.cost){
+  alert("🪙 포인트가 부족해요!");
+  return;
+ }
+
+ data.coins-=item.cost;
+ data.items.push(item.id);
+
+ save();
+ render();
+
+ message(
+  "🎉 "+item.name+"을 구매했어요!"
+ );
+}
+
+
+function renderShop(){
+
+ const box=document.getElementById("shopList");
+
+ box.innerHTML=shopItems.map(item=>{
+
+  const owned=data.items.includes(item.id);
+
+  return `
+   <div class="shopItem">
+    <div class="emoji">${item.emoji}</div>
+    <b>${item.name}</b>
+    <br>
+    <small>🪙 ${item.cost}</small>
+    <br>
+    <button
+      onclick="buyItem(shopItems.find(x=>x.id==='${item.id}'))"
+      ${owned?"disabled":""}>
+      ${owned?"보유 중":"구매"}
+    </button>
+   </div>
+  `;
+
+ }).join("");
+}
+
+
+function getTotal(type){
+
+ return data.records
+ .filter(r=>r.type===type)
+ .reduce((sum,r)=>sum+r.amount,0);
+}
+
+
+function renderRecords(){
+
+ const box=document.getElementById("records");
+
+ if(data.records.length===0){
+
+  box.innerHTML=`
+   <div class="empty">
+    아직 기록이 없어요. 🌱<br>
+    첫 번째 용돈 기록을 만들어 보세요!
+   </div>
+  `;
+
+  return;
+ }
+
+ box.innerHTML=data.records.map(r=>`
+
+  <div class="record">
+
+   <div class="recordIcon ${r.type==="income"?"in":"out"}">
+    ${r.type==="income"?"💵":"🛍️"}
+   </div>
+
+   <div class="recordInfo">
+    <b>${escapeHTML(r.memo)}</b>
+    <small>${r.date}</small>
+   </div>
+
+   <div class="recordAmount ${r.type==="income"?"green":"red"}">
+    ${r.type==="income"?"+":"-"}${money(r.amount)}
+   </div>
+
+   <button class="delete"
+    onclick="deleteRecord(${r.id})">
+    ❌
+   </button>
+
+  </div>
+
+ `).join("");
+}
+
+
+function renderGoal(){
+
+ const saved=getTotal("income")-getTotal("expense");
+
+ document.getElementById("goalNameDisplay")
+ .textContent=data.goal.name ||
+ "아직 목표가 없어요!";
+
+ document.getElementById("goalSaved")
+ .textContent=saved.toLocaleString("ko-KR");
+
+ document.getElementById("goalAmount")
+ .textContent=Number(data.goal.amount||0)
+ .toLocaleString("ko-KR");
+
+ let percent=0;
+
+ if(data.goal.amount>0){
+  percent=Math.min(
+   100,
+   Math.round(saved/data.goal.amount*100)
+  );
+ }
+
+ document.getElementById("goalProgress")
+ .style.width=percent+"%";
+
+ document.getElementById("goalPercent")
+ .textContent=percent+"%";
+
+ if(percent>=100 && data.goal.amount>0){
+  document.getElementById("goalNameDisplay")
+  .textContent="🎉 목표 달성!";
+ }
+}
+
+
+function renderMission(){
+
+ document.getElementById("missionEmoji")
+ .textContent=todayMission.emoji;
+
+ document.getElementById("missionTitle")
+ .textContent=todayMission.title;
+
+ document.getElementById("missionText")
+ .textContent=todayMission.text;
+
+ document.getElementById("missionReward")
+ .textContent=todayMission.reward;
+
+ const button=document.getElementById("missionButton");
+
+ if(data.missionDone){
+  button.textContent="✅ 오늘 미션 완료";
+  button.disabled=true;
+ }else{
+  button.textContent="미션 완료!";
+  button.disabled=false;
+ }
+}
+
+
+function renderDetective(){
+
+ const categories={
+  "🍔 음식":0,
+  "✏️ 문구":0,
+  "🎮 놀이":0,
+  "🎁 선물":0,
+  "🏠 기타":0
+ };
+
+ data.records
+ .filter(r=>r.type==="expense")
+ .forEach(r=>{
+
+  const text=r.memo;
+
+  if(/먹|밥|과자|음료|빵|햄버거|치킨/.test(text))
+   categories["🍔 음식"]+=r.amount;
+
+  else if(/연필|문구|지우개|노트|색연필/.test(text))
+   categories["✏️ 문구"]+=r.amount;
+
+  else if(/게임|장난감|놀이|인형/.test(text))
+   categories["🎮 놀이"]+=r.amount;
+
+  else if(/선물|친구/.test(text))
+   categories["🎁 선물"]+=r.amount;
+
+  else
+   categories["🏠 기타"]+=r.amount;
+ });
+
+ const max=Math.max(...Object.values(categories),1);
+
+ document.getElementById("detective").innerHTML=
+ Object.entries(categories).map(([name,value])=>`
+
+  <div class="category">
+
+   <div class="categoryTop">
+    <span>${name}</span>
+    <b>${money(value)}</b>
+   </div>
+
+   <div class="bar">
+    <div style="width:${value/max*100}%"></div>
+   </div>
+
+  </div>
+
+ `).join("");
+}
+
+
+function renderAchievements(){
+
+ const income=getTotal("income");
+ const expense=getTotal("expense");
+
+ const list=[
+  {
+   emoji:"🌱",
+   title:"첫 기록",
+   text:"돈 기록 1개 만들기",
+   done:data.records.length>=1
+  },
+  {
+   emoji:"💵",
+   title:"용돈 받기",
+   text:"용돈 받은 기록 만들기",
+   done:income>0
+  },
+  {
+   emoji:"🛍️",
+   title:"첫 소비",
+   text:"돈 쓴 기록 만들기",
+   done:expense>0
+  },
+  {
+   emoji:"⭐",
+   title:"레벨 2",
+   text:"레벨 2 달성하기",
+   done:data.level>=2
+  },
+  {
+   emoji:"🎯",
+   title:"목표 만들기",
+   text:"저축 목표 만들기",
+   done:data.goal.amount>0
+  },
+  {
+   emoji:"🎲",
+   title:"미션 클리어",
+   text:"오늘의 미션 완료",
+   done:data.missionDone
+  },
+  {
+   emoji:"🪙",
+   title:"포인트 수집가",
+   text:"100 포인트 모으기",
+   done:data.coins>=100
+  }
+ ];
+
+ document.getElementById("achievements")
+ .innerHTML=list.map(a=>`
+
+  <div class="achievement ${a.done?"done":""}">
+
+   <div class="aemoji">
+    ${a.done?"🏆":a.emoji}
+   </div>
+
+   <div>
+    <b>${a.title}</b>
+    <br>
+    <small>${a.text}</small>
+   </div>
+
+  </div>
+
+ `).join("");
+}
+
+
+function escapeHTML(text){
+
+ return text
+ .replaceAll("&","&amp;")
+ .replaceAll("<","&lt;")
+ .replaceAll(">","&gt;")
+ .replaceAll('"',"&quot;")
+ .replaceAll("'","&#039;");
+}
+
+
+function render(){
+
+ const income=getTotal("income");
+ const expense=getTotal("expense");
+ const balance=income-expense;
+
+ document.getElementById("balance")
+ .textContent=money(balance);
+
+ document.getElementById("income")
+ .textContent=money(income);
+
+ document.getElementById("expense")
+ .textContent=money(expense);
+
+ document.getElementById("coins")
+ .textContent=data.coins;
+
+ document.getElementById("shopCoins")
+ .textContent=data.coins;
+
+ document.getElementById("level")
+ .textContent=data.level;
+
+ document.getElementById("xp")
+ .textContent=data.xp;
+
+ document.getElementById("nextxp")
+ .textContent=data.level*100;
+
+ document.getElementById("xpfill")
+ .style.width=
+ (data.xp/(data.level*100)*100)+"%";
+
+ document.getElementById("character")
+ .textContent=data.character;
+
+ document.getElementById("bigPig")
+ .textContent=data.character;
+
+ document.getElementById("characterName")
+ .textContent=data.characterName;
+
+ document.querySelectorAll(".charChoice")
+ .forEach(btn=>{
+  btn.classList.toggle(
+   "selected",
+   btn.dataset.char===data.character
+  );
+ });
+
+ renderRecords();
+ renderGoal();
+ renderMission();
+ renderShop();
+ renderDetective();
+ renderAchievements();
+
+ save();
+}
+
+
+render();
+
+</script>
+
+</body>
+</html>

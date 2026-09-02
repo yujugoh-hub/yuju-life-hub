@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>📚 나만의 공부 도우미</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:"Segoe UI",sans-serif;
+    background:linear-gradient(135deg,#dff3ff,#f5e8ff);
+    color:#263238;
+}
+
+.app{
+    max-width:900px;
+    margin:auto;
+    padding:25px;
+}
+
+header{
+    background:white;
+    border-radius:25px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 10px 30px #0001;
+}
+
+header h1{
+    margin:0;
+    font-size:32px;
+}
+
+header p{
+    margin:8px 0 0;
+    color:#777;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.stat{
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 8px 20px #0001;
+}
+
+.stat .icon{
+    font-size:30px;
+}
+
+.stat b{
+    display:block;
+    font-size:23px;
+    margin-top:5px;
+}
+
+.card{
+    background:white;
+    margin-top:20px;
+    padding:25px;
+    border-radius:25px;
+    box-shadow:0 8px 25px #0001;
+}
+
+.progress{
+    height:25px;
+    background:#eee;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:15px;
+}
+
+.progressBar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#7c4dff,#42a5f5);
+    transition:.3s;
+}
+
+.timer{
+    text-align:center;
+    font-size:70px;
+    font-weight:bold;
+    margin:20px 0;
+    letter-spacing:3px;
+}
+
+.buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+button{
+    border:0;
+    border-radius:15px;
+    padding:15px 20px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    background:#7c4dff;
+    color:white;
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+button.secondary{
+    background:#eceff1;
+    color:#37474f;
+}
+
+input,select{
+    width:100%;
+    padding:14px;
+    border:2px solid #eee;
+    border-radius:13px;
+    font-size:16px;
+    margin-top:8px;
+}
+
+.reward{
+    text-align:center;
+    font-size:20px;
+    padding:20px;
+    background:#fff8e1;
+    border-radius:18px;
+    margin-top:15px;
+}
+
+.log{
+    border-bottom:1px solid #eee;
+    padding:12px 0;
+}
+
+.empty{
+    text-align:center;
+    color:#999;
+    padding:20px;
+}
+
+@media(max-width:650px){
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .timer{
+        font-size:52px;
+    }
+
+    header h1{
+        font-size:25px;
+    }
+}
+</style>
+</head>
+
+<body>
+<style>
+.yuju-home-button {
+    display: block;
+    width: fit-content;
+    margin: 12px auto 18px auto;
+    padding: 9px 16px;
+    border: 2px solid rgba(0,0,0,.10);
+    border-radius: 14px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(0,0,0,.12);
+    font-family: Arial, sans-serif;
+    position: relative;
+    z-index: 9999;
+}
+
+.yuju-home-button:hover {
+    transform: translateY(-1px);
+}
+
+.yuju-home-button:active {
+    transform: scale(.97);
+}
+</style>
+
+<a class="yuju-home-button" href="../../index.html">&#x1F3E0; 메인으로</a>
+
+
+<div class="app">
+
+<header>
+    <h1>📚 나만의 공부 도우미</h1>
+    <p>공부하고 경험치를 모아 레벨업하세요!</p>
+</header>
+
+<div class="stats">
+
+<div class="stat">
+<div class="icon">🏆</div>
+<b id="level">Lv.1</b>
+<span>레벨</span>
+</div>
+
+<div class="stat">
+<div class="icon">⭐</div>
+<b id="xp">0</b>
+<span>경험치</span>
+</div>
+
+<div class="stat">
+<div class="icon">⏱️</div>
+<b id="today">0분</b>
+<span>오늘 공부</span>
+</div>
+
+<div class="stat">
+<div class="icon">🔥</div>
+<b id="streak">0일</b>
+<span>연속 공부</span>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🎯 오늘의 목표</h2>
+
+<div>
+오늘 목표: <b id="goalText">60분</b>
+</div>
+
+<div class="progress">
+<div class="progressBar" id="progressBar"></div>
+</div>
+
+<p id="percent">0%</p>
+
+<button onclick="setGoal()">🎯 목표 바꾸기</button>
+
+</div>
+
+<div class="card">
+
+<h2>📖 공부 시작</h2>
+
+<label>과목</label>
+
+<select id="subject">
+<option>📚 수학</option>
+<option>📖 국어</option>
+<option>🔬 과학</option>
+<option>🌎 영어</option>
+<option>🎨 미술</option>
+<option>💻 코딩</option>
+<option>✏️ 기타</option>
+</select>
+
+<label>공부 시간</label>
+
+<input id="minutes" type="number" min="1" value="25">
+
+<div class="timer" id="timer">25:00</div>
+
+<div class="buttons">
+
+<button onclick="startTimer()">▶️ 시작</button>
+
+<button onclick="pauseTimer()" class="secondary">
+⏸️ 일시정지
+</button>
+
+<button onclick="resetTimer()" class="secondary">
+🔄 다시
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🎁 오늘의 보상</h2>
+
+<div class="reward" id="reward">
+공부를 시작하면 보상이 나타나요! ⭐
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>📝 공부 기록</h2>
+
+<div id="logs"></div>
+
+</div>
+
+</div>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("studyHelper")) || {
+    level:1,
+    xp:0,
+    goal:60,
+    today:0,
+    streak:0,
+    lastDate:"",
+    logs:[]
+};
+
+let timerInterval=null;
+let remaining=25*60;
+let running=false;
+
+function save(){
+    localStorage.setItem("studyHelper",JSON.stringify(data));
+}
+
+function todayDate(){
+    return new Date().toISOString().slice(0,10);
+}
+
+function update(){
+
+    document.getElementById("level").textContent="Lv."+data.level;
+    document.getElementById("xp").textContent=data.xp;
+    document.getElementById("today").textContent=data.today+"분";
+    document.getElementById("streak").textContent=data.streak+"일";
+
+    document.getElementById("goalText").textContent=data.goal+"분";
+
+    let percent=Math.min(100,
+        Math.round(data.today/data.goal*100)
+    );
+
+    document.getElementById("percent").textContent=percent+"%";
+    document.getElementById("progressBar").style.width=percent+"%";
+
+    showLogs();
+
+    save();
+}
+
+function showLogs(){
+
+    const box=document.getElementById("logs");
+
+    if(data.logs.length===0){
+        box.innerHTML='<div class="empty">아직 공부 기록이 없어요 📚</div>';
+        return;
+    }
+
+    box.innerHTML="";
+
+    data.logs.slice().reverse().forEach(log=>{
+
+        let div=document.createElement("div");
+
+        div.className="log";
+
+        div.innerHTML=
+        "📖 <b>"+escapeHtml(log.subject)+
+        "</b> · "+log.minutes+"분 · ⭐ +"+
+        log.xp+" XP<br><small>"+log.date+"</small>";
+
+        box.appendChild(div);
+    });
+}
+
+function escapeHtml(text){
+
+    return text.replace(/[&<>"']/g,function(m){
+        return {
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+        }[m];
+    });
+}
+
+function setGoal(){
+
+    let value=prompt(
+        "오늘 몇 분 공부할까요?",
+        data.goal
+    );
+
+    if(value!==null){
+
+        value=parseInt(value);
+
+        if(value>0){
+            data.goal=value;
+            update();
+        }
+    }
+}
+
+function startTimer(){
+
+    if(running)return;
+
+    let min=parseInt(
+        document.getElementById("minutes").value
+    );
+
+    if(!min || min<1){
+        alert("공부 시간을 입력해주세요!");
+        return;
+    }
+
+    if(remaining<=0){
+        remaining=min*60;
+    }
+
+    running=true;
+
+    timerInterval=setInterval(()=>{
+
+        remaining--;
+
+        displayTimer();
+
+        if(remaining<=0){
+
+            clearInterval(timerInterval);
+            running=false;
+
+            completeStudy(min);
+
+            remaining=min*60;
+            displayTimer();
+        }
+
+    },1000);
+}
+
+function pauseTimer(){
+
+    if(timerInterval){
+        clearInterval(timerInterval);
+        timerInterval=null;
+    }
+
+    running=false;
+}
+
+function resetTimer(){
+
+    pauseTimer();
+
+    let min=parseInt(
+        document.getElementById("minutes").value
+    ) || 25;
+
+    remaining=min*60;
+
+    displayTimer();
+}
+
+function displayTimer(){
+
+    let min=Math.floor(remaining/60);
+    let sec=remaining%60;
+
+    document.getElementById("timer").textContent=
+        String(min).padStart(2,"0")+
+        ":"+
+        String(sec).padStart(2,"0");
+}
+
+function completeStudy(minutes){
+
+    const subject=
+        document.getElementById("subject").value;
+
+    let xp=minutes*2;
+
+    data.today+=minutes;
+    data.xp+=xp;
+
+    let oldLevel=data.level;
+
+    while(data.xp >= data.level*100){
+
+        data.xp-=data.level*100;
+        data.level++;
+    }
+
+    let today=todayDate();
+
+    if(data.lastDate!==today){
+
+        data.streak++;
+        data.lastDate=today;
+    }
+
+    data.logs.push({
+        date:new Date().toLocaleString(),
+        subject:subject,
+        minutes:minutes,
+        xp:xp
+    });
+
+    let reward=
+        "🎉 공부 완료! "+
+        minutes+"분 공부해서 ⭐ +"+
+        xp+" XP를 얻었어요!";
+
+    if(data.level>oldLevel){
+
+        reward+=
+        "<br><br>🏆🎊 LEVEL UP! 🎊🏆"+
+        "<br>Lv."+oldLevel+
+        " → Lv."+data.level;
+    }
+
+    if(data.today>=data.goal){
+
+        reward+=
+        "<br><br>🎯 오늘 목표 달성!";
+    }
+
+    document.getElementById("reward").innerHTML=reward;
+
+    update();
+
+    alert(
+        "🎉 공부 완료!\n\n"+
+        minutes+"분 공부\n"+
+        "+"+xp+" XP 획득!"
+    );
+}
+
+document
+.getElementById("minutes")
+.addEventListener("input",function(){
+
+    if(!running){
+
+        let min=parseInt(this.value)||25;
+
+        remaining=min*60;
+
+        displayTimer();
+    }
+});
+
+update();
+displayTimer();
+
+</script>
+
+</body>
+</html>

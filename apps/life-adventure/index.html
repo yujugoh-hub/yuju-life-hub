@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>🏠 우리집 생활 어드벤처</title>
+
+<style>
+*{
+ box-sizing:border-box;
+ -webkit-tap-highlight-color:transparent;
+}
+
+body{
+ margin:0;
+ font-family:Arial,"Malgun Gothic",sans-serif;
+ background:#eef5ff;
+ color:#263238;
+}
+
+button{
+ border:0;
+ border-radius:18px;
+ padding:14px 18px;
+ font-size:17px;
+ font-weight:bold;
+ cursor:pointer;
+ background:white;
+ box-shadow:0 4px 12px #0002;
+}
+
+button:active{
+ transform:scale(.95);
+}
+
+#app{
+ max-width:900px;
+ margin:auto;
+ min-height:100vh;
+}
+
+header{
+ background:linear-gradient(135deg,#7c9cff,#a98cff);
+ color:white;
+ padding:22px;
+ border-radius:0 0 28px 28px;
+ box-shadow:0 5px 15px #0002;
+}
+
+.title{
+ font-size:28px;
+ font-weight:bold;
+ margin-bottom:15px;
+}
+
+.stats{
+ display:flex;
+ gap:10px;
+ flex-wrap:wrap;
+}
+
+.stat{
+ background:#ffffff33;
+ padding:9px 14px;
+ border-radius:15px;
+}
+
+main{
+ padding:20px;
+}
+
+.screen{
+ display:none;
+}
+
+.screen.active{
+ display:block;
+}
+
+.home-card{
+ background:white;
+ border-radius:25px;
+ padding:22px;
+ margin-bottom:18px;
+ box-shadow:0 5px 15px #0001;
+}
+
+.house{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+ margin-top:15px;
+}
+
+.room{
+ min-height:120px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+ border-radius:22px;
+ background:#f5f7ff;
+ font-size:22px;
+ font-weight:bold;
+}
+
+.room span{
+ font-size:45px;
+}
+
+.missions{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+}
+
+.mission{
+ min-height:105px;
+ text-align:left;
+ background:white;
+}
+
+.mission .emoji{
+ font-size:35px;
+ display:block;
+ margin-bottom:7px;
+}
+
+.back{
+ margin-bottom:15px;
+ background:#263238;
+ color:white;
+}
+
+h1{
+ font-size:27px;
+}
+
+h2{
+ margin-top:5px;
+}
+
+.gamebox{
+ background:white;
+ padding:22px;
+ border-radius:25px;
+ box-shadow:0 5px 15px #0001;
+}
+
+.choice-grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+ margin-top:15px;
+}
+
+.choice{
+ min-height:75px;
+}
+
+.result{
+ margin-top:18px;
+ padding:18px;
+ background:#f0f5ff;
+ border-radius:18px;
+ font-size:18px;
+ line-height:1.6;
+}
+
+.money{
+ font-size:30px;
+ font-weight:bold;
+}
+
+.timer{
+ font-size:55px;
+ text-align:center;
+ margin:20px;
+ font-weight:bold;
+}
+
+.progress{
+ height:18px;
+ background:#ddd;
+ border-radius:20px;
+ overflow:hidden;
+ margin-top:10px;
+}
+
+.progress-bar{
+ height:100%;
+ background:#7c9cff;
+ width:0%;
+ transition:.3s;
+}
+
+.list-item{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ background:#f5f7ff;
+ padding:13px;
+ border-radius:15px;
+ margin:8px 0;
+}
+
+@media(max-width:600px){
+ .missions{
+  grid-template-columns:1fr;
+ }
+ .house{
+  grid-template-columns:1fr 1fr;
+ }
+ .choice-grid{
+  grid-template-columns:1fr;
+ }
+ .title{
+  font-size:24px;
+ }
+}
+</style>
+</head>
+
+<body>
+<style>
+.yuju-home-button {
+    display: block;
+    width: fit-content;
+    margin: 12px auto 18px auto;
+    padding: 9px 16px;
+    border: 2px solid rgba(0,0,0,.10);
+    border-radius: 14px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(0,0,0,.12);
+    font-family: Arial, sans-serif;
+    position: relative;
+    z-index: 9999;
+}
+
+.yuju-home-button:hover {
+    transform: translateY(-1px);
+}
+
+.yuju-home-button:active {
+    transform: scale(.97);
+}
+</style>
+
+<a class="yuju-home-button" href="../../index.html">&#x1F3E0; 메인으로</a>
+
+
+<div id="app">
+
+<header>
+ <div class="title">🏠 우리집 생활 어드벤처</div>
+
+ <div class="stats">
+  <div class="stat">👤 유주</div>
+  <div class="stat">⭐ Lv.<span id="level">1</span></div>
+  <div class="stat">✨ XP <span id="xp">0</span></div>
+  <div class="stat">💰 <span id="coins">1000</span></div>
+ </div>
+
+ <div class="progress">
+  <div class="progress-bar" id="xpbar"></div>
+ </div>
+</header>
+
+<main>
+
+<!-- HOME -->
+<section id="home" class="screen active">
+
+<div class="home-card">
+<h2>🏠 우리집</h2>
+<p>오늘의 생활 미션을 해결해 보자!</p>
+
+<div class="house">
+ <div class="room">
+  <span>🛏️</span>
+  내 방
+ </div>
+
+ <div class="room">
+  <span>📚</span>
+  공부방
+ </div>
+
+ <div class="room">
+  <span>🍳</span>
+  주방
+ </div>
+
+ <div class="room">
+  <span>🛋️</span>
+  거실
+ </div>
+</div>
+</div>
+
+<div class="home-card">
+<h2>🎮 생활 미션</h2>
+
+<div class="missions">
+
+<button class="mission" onclick="openGame('clean')">
+<span class="emoji">🧹</span>
+우리집 탈출작전
+</button>
+
+<button class="mission" onclick="openGame('money')">
+<span class="emoji">💸</span>
+1만원 생존게임
+</button>
+
+<button class="mission" onclick="openGame('food')">
+<span class="emoji">🍳</span>
+오늘 뭐 먹지?
+</button>
+
+<button class="mission" onclick="openGame('travel')">
+<span class="emoji">🧳</span>
+여행 준비 RPG
+</button>
+
+<button class="mission" onclick="openGame('bag')">
+<span class="emoji">🎒</span>
+가방 정리 챌린지
+</button>
+
+<button class="mission" onclick="openGame('safety')">
+<span class="emoji">🚦</span>
+안전 마을
+</button>
+
+<button class="mission" onclick="openGame('timer')">
+<span class="emoji">⏱️</span>
+10분 타이머
+</button>
+
+<button class="mission" onclick="openGame('mart')">
+<span class="emoji">🛒</span>
+마트 계산왕
+</button>
+
+<button class="mission" onclick="openGame('detective')">
+<span class="emoji">🔎</span>
+분실물 탐정
+</button>
+
+</div>
+</div>
+
+</section>
+
+
+<!-- CLEAN -->
+<section id="clean" class="screen">
+
+<button class="back" onclick="home()">← 홈으로</button>
+
+<div class="gamebox">
+<h1>🧹 우리집 탈출작전</h1>
+<p>집 안의 정리 미션을 해결해 보자!</p>
+
+<div class="choice-grid">
+<button onclick="cleanTask(this)">🧸 장난감 정리</button>
+<button onclick="cleanTask(this)">📚 책 정리</button>
+<button onclick="cleanTask(this)">👕 옷 정리</button>
+<button onclick="cleanTask(this)">🗑️ 쓰레기 정리</button>
+</div>
+
+<div id="cleanResult" class="result">
+미션을 하나 선택하세요.
+</div>
+</div>
+
+</section>
+
+
+<!-- MONEY -->
+<section id="money" class="screen">
+
+<button class="back" onclick="home()">← 홈으로</button>
+
+<div class="gamebox">
+<h1>💸 1만원 생존게임</h1>
+
+<p>가지고 있는 돈</p>
+<div class="money">₩10,000</div>
+
+<p>오늘 꼭 필요한 물건 하나를 골라보세요.</p>
+
+<div class="choice-grid">
+<button onclick="buyItem('🍞 빵',1500)">🍞 빵<br>₩1,500</button>
+<button onclick="buyItem('🥛 우유',2000)">🥛 우유<br>₩2,000</button>
+<button onclick="buyItem('📓 공책',3000)">📓 공책<br>₩3,000</button>
+<button onclick="buyItem('✏️ 연필',1000)">✏️ 연필<br>₩1,000</button>
+</div>
+
+<div id="moneyResult" class="result">
+아직 아무것도 사지 않았어요.
+</div>
+</div>
+
+</section>
+
+
+<!-- FOOD -->
+<section id="food" class="screen">
+
+<button class="back" onclick="home()">← 홈으로</button>
+
+<div class="gamebox">
+<h1>🍳 오늘 뭐 먹지?</h1>
+<p>오늘 먹고 싶은 메뉴를 골라보세요.</p>
+
+<div class="choice-grid">
+<button onclick="chooseFood('🍚 김치볶음밥')">🍚 김치볶음밥</button>
+<button onclick="chooseFood('🍝 파스타')">🍝 파스타</button>
+<button onclick="chooseFood('🍙 주먹밥')">🍙 주먹밥</button>
+<button onclick="chooseFood('🥪 샌드위치')">🥪 샌드위치</button>
+</div>
+
+<div id="foodResult" class="result">
+메뉴를 선택하세요.
+</div>
+</div>
+
+</section>
+
+
+<!-- TRAVEL -->
+<section id="travel" class="screen">
+
+<button class="back" onclick="home()">← 홈으로</button>
+
+<div class="gamebox">
+<h1>🧳 여행 준비 RPG</h1>
+<p>여행 장소를 선택하면 필요한 준비물이 나타나요.</p>
+
+<div class="choice-grid">
+<button onclick="travel('🏖️ 바다')">🏖️ 바다</button>
+<button onclick="travel('⛰️ 산')">⛰️ 산</button>
+<button onclick="travel('🏙️ 도시')">🏙️ 도시</button>
+<button onclick="travel('🏕️ 캠핑')">🏕️ 캠핑</button>
+</div>
+
+<div id="travelResult" class="result">
+여행 장소를 골라보세요.
+</div>
+</div>
+
+</section>
+
+
+<!-- BAG -->
+<section id="bag" class="screen">
+
+<button class="back" onclick="home()">← 홈으로</button>
+
+<div class="gamebox">
+<h1>🎒 가방 정리 챌린지</h1>
+<p>학교에 필요한 물건만 골라 가방에 넣어보세요.</p>
+
+<div id="bagItems"></div>
+
+<div id="bagResult" class="result">
+필요한 물건을 골라주세요.
+</div>
+</div>
+
+</section>
+
+
+<!-- SAFETY -->
+<section id="safety" class="screen">
+
+<button class="back" onclick="home()">← 홈으로</button>
+
+<div class="gamebox">
+<h1>🚦 안전 마을</h1>
+<div id="safetyQuestion"></div>
+</div>
+
+</section>
+
+
+<!-- TIMER -->
+<section id="timer" class="screen">
+
+<button class="back" onclick="home()">← 홈으로</button>
+
+<div class="gamebox">
+<h1>⏱️ 10분 타이머</h1>
+
+<p>집중해서 할 일을 정하고 시작하세요.</p>
+
+<input id="timerTask"
+placeholder="예: 책 읽기"
+style="width:100%;padding:15px;border-radius:15px;border:2px solid #ddd;font-size:17px">
+
+<div class="timer" id="timerDisplay">10:00</div>
+
+<div class="choice-grid">
+<button onclick="startTimer()">▶️ 시작</button>
+<button onclick="stopTimer()">⏹️ 멈춤</button>
+</div>
+
+<div id="timerResult" class="result">
+아직 시작하지 않았어요.
+</div>
+</div>
+
+</section>
+
+
+<!-- MART -->
+<section id="mart" class="screen">
+
+<button class="back" onclick="home()">← 홈으로</button>
+
+<div class="gamebox">
+<h1>🛒 마트 계산왕</h1>
+
+<p>예산: <b>₩10,000</b></p>
+
+<div id="cart"></div>
+
+<div class="choice-grid">
+<button onclick="addCart('🍎 사과',2000)">🍎 사과<br>₩2,000</button>
+<button onclick="addCart('🥛 우유',2500)">🥛 우유<br>₩2,500</button>
+<button onclick="addCart('🍞 빵',1800)">🍞 빵<br>₩1,800</button>
+<button onclick="addCart('🍌 바나나',1500)">🍌 바나나<br>₩1,500</button>
+</div>
+
+<div id="cartResult" class="result">
+물건을 골라보세요.
+</div>
+</div>
+
+</section>
+
+
+<!-- DETECTIVE -->
+<section id="detective" class="screen">
+
+<button class="back" onclick="home()">← 홈으로</button>
+
+<div class="gamebox">
+<h1>🔎 분실물 탐정</h1>
+<p id="detectiveQuestion"></p>
+
+<div class="choice-grid">
+<button onclick="detectiveAnswer('bed')">🛏️ 침대</button>
+<button onclick="detectiveAnswer('desk')">📚 책상</button>
+<button onclick="detectiveAnswer('kitchen')">🍳 주방</button>
+<button onclick="detectiveAnswer('sofa')">🛋️ 소파</button>
+</div>
+
+<div id="detectiveResult" class="result">
+어디에 있을까요?
+</div>
+</div>
+
+</section>
+
+</main>
+</div>
+
+
+<script>
+
+let xp = Number(localStorage.getItem("lifeXP")) || 0;
+let coins = Number(localStorage.getItem("lifeCoins")) || 1000;
+
+function update(){
+ let level = Math.floor(xp/100)+1;
+ let levelXP = xp%100;
+
+ document.getElementById("level").textContent=level;
+ document.getElementById("xp").textContent=levelXP;
+ document.getElementById("coins").textContent=coins;
+
+ document.getElementById("xpbar").style.width=levelXP+"%";
+
+ localStorage.setItem("lifeXP",xp);
+ localStorage.setItem("lifeCoins",coins);
+}
+
+function reward(amountXP,amountCoins){
+ xp+=amountXP;
+ coins+=amountCoins;
+ update();
+
+ alert("🎉 미션 완료!\n+"+amountXP+" XP\n+"+amountCoins+" 코인");
+}
+
+function home(){
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+ document.getElementById("home").classList.add("active");
+ update();
+}
+
+function openGame(id){
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+
+ if(id==="bag") setupBag();
+ if(id==="safety") setupSafety();
+ if(id==="detective") setupDetective();
+}
+
+
+function cleanTask(btn){
+ document.getElementById("cleanResult").innerHTML=
+ "✅ "+btn.innerText+" 완료!<br>방이 조금 더 깨끗해졌어요.";
+
+ reward(20,20);
+}
+
+
+function buyItem(name,price){
+
+ let remain=10000-price;
+
+ document.getElementById("moneyResult").innerHTML=
+ "🛍️ "+name+" 구매 완료!<br>"+
+ "💰 남은 돈: ₩"+remain.toLocaleString();
+
+ reward(15,10);
+}
+
+
+function chooseFood(food){
+
+ document.getElementById("foodResult").innerHTML=
+ "🍽️ 오늘의 메뉴는 <b>"+food+"</b>!<br>"+
+ "맛있는 식사 시간이 되었어요.";
+
+ reward(10,10);
+}
+
+
+function travel(place){
+
+ const data={
+ "🏖️ 바다":["수영복","모자","물","수건"],
+ "⛰️ 산":["운동화","물","모자","간식"],
+ "🏙️ 도시":["지갑","휴대폰","물","가방"],
+ "🏕️ 캠핑":["텐트","랜턴","물","간식"]
+ };
+
+ document.getElementById("travelResult").innerHTML=
+ "<b>"+place+" 여행 준비물</b><br><br>"+
+ data[place].map(x=>"🎒 "+x).join("<br>");
+
+ reward(20,20);
+}
+
+
+function setupBag(){
+
+ const items=[
+ "📚 교과서",
+ "✏️ 필통",
+ "💧 물병",
+ "🧸 장난감",
+ "📱 휴대폰",
+ "📓 공책"
+ ];
+
+ document.getElementById("bagItems").innerHTML=
+ items.map((x,i)=>
+ `<div class="list-item">
+ ${x}
+ <button onclick="bagPick(${i})">넣기</button>
+ </div>`).join("");
+}
+
+let bagCorrect=[0,1,2,5];
+let bagPicked=[];
+
+function bagPick(i){
+
+ if(!bagPicked.includes(i)){
+  bagPicked.push(i);
+ }
+
+ if(bagPicked.includes(3)){
+  document.getElementById("bagResult").innerHTML=
+  "🧸 장난감은 오늘 꼭 필요한 물건이 아니에요.";
+ }else{
+  document.getElementById("bagResult").innerHTML=
+  "🎒 가방에 물건을 넣었어요!<br>"+
+  "현재 "+bagPicked.length+"개";
+ }
+
+ if(bagPicked.length>=4){
+  let correct=bagPicked.every(x=>bagCorrect.includes(x));
+
+  if(correct){
+   reward(30,30);
+   document.getElementById("bagResult").innerHTML=
+   "🏆 완벽해요! 필요한 준비물을 모두 골랐어요.";
+  }
+ }
+}
+
+
+const safetyData=[
+ {
+  q:"🚦 횡단보도를 건널 때 가장 먼저 해야 하는 것은?",
+  a:["바로 뛰어간다","신호를 확인한다","눈을 감는다","친구를 밀친다"],
+  c:1
+ },
+ {
+  q:"🔥 뜨거운 냄비를 발견했어요. 어떻게 해야 할까요?",
+  a:["맨손으로 만진다","장난친다","어른에게 알린다","물을 마신다"],
+  c:2
+ },
+ {
+  q:"🏠 집에서 낯선 사람이 문을 열어달라고 해요.",
+  a:["바로 문을 연다","문을 잠그고 어른에게 알린다","밖으로 나간다","모른 척한다"],
+  c:1
+ }
+];
+
+let safetyIndex=0;
+
+function setupSafety(){
+ safetyIndex=0;
+ showSafety();
+}
+
+function showSafety(){
+
+ let q=safetyData[safetyIndex];
+
+ document.getElementById("safetyQuestion").innerHTML=
+ "<h2>"+q.q+"</h2>"+
+ q.a.map((x,i)=>
+ `<button style="width:100%;margin:6px 0" onclick="safetyAnswer(${i})">${x}</button>`
+ ).join("");
+}
+
+function safetyAnswer(i){
+
+ let q=safetyData[safetyIndex];
+
+ if(i===q.c){
+  reward(25,25);
+ }else{
+  alert("한번 더 생각해 보세요!");
+ }
+
+ safetyIndex++;
+
+ if(safetyIndex>=safetyData.length){
+  document.getElementById("safetyQuestion").innerHTML=
+  "<h2>🏆 안전 마을 미션 완료!</h2>"+
+  "<p>생활 속 안전 규칙을 잘 기억해요.</p>";
+ }else{
+  showSafety();
+ }
+}
+
+
+let timerSeconds=600;
+let timerInterval=null;
+
+function startTimer(){
+
+ clearInterval(timerInterval);
+
+ let task=document.getElementById("timerTask").value || "집중하기";
+
+ timerSeconds=600;
+
+ document.getElementById("timerResult").innerHTML=
+ "🎯 미션: "+task;
+
+ timerInterval=setInterval(()=>{
+
+  timerSeconds--;
+
+  let m=Math.floor(timerSeconds/60);
+  let s=timerSeconds%60;
+
+  document.getElementById("timerDisplay").textContent=
+  String(m).padStart(2,"0")+":"+
+  String(s).padStart(2,"0");
+
+  if(timerSeconds<=0){
+   clearInterval(timerInterval);
+   reward(40,40);
+
+   document.getElementById("timerResult").innerHTML=
+   "🎉 10분 집중 성공!";
+  }
+
+ },1000);
+}
+
+function stopTimer(){
+ clearInterval(timerInterval);
+
+ document.getElementById("timerResult").innerHTML=
+ "⏸️ 타이머가 멈췄어요.";
+}
+
+
+let cartItems=[];
+let cartTotal=0;
+
+function addCart(name,price){
+
+ if(cartTotal+price>10000){
+  document.getElementById("cartResult").innerHTML=
+  "❌ 예산을 초과했어요!";
+  return;
+ }
+
+ cartItems.push(name);
+ cartTotal+=price;
+
+ document.getElementById("cart").innerHTML=
+ cartItems.map(x=>"🛒 "+x).join("<br>");
+
+ document.getElementById("cartResult").innerHTML=
+ "💰 현재 금액: ₩"+cartTotal.toLocaleString()+
+ "<br>💵 남은 돈: ₩"+(10000-cartTotal).toLocaleString();
+
+ if(cartItems.length>=3){
+  reward(20,20);
+ }
+}
+
+
+let detectivePlace="desk";
+
+function setupDetective(){
+
+ const places={
+ desk:"책상에서 숙제를 했어요.",
+ bed:"침대에서 잠을 잤어요.",
+ kitchen:"주방에서 간식을 먹었어요.",
+ sofa:"소파에서 TV를 봤어요."
+ };
+
+ detectivePlace="desk";
+
+ document.getElementById("detectiveQuestion").innerHTML=
+ "🔎 단서를 찾았어요!<br><br>"+
+ "마지막으로 숙제를 한 뒤 연필이 사라졌어요.<br>"+
+ "연필은 어디에 있을까요?";
+}
+
+function detectiveAnswer(place){
+
+ if(place===detectivePlace){
+  document.getElementById("detectiveResult").innerHTML=
+  "🎉 정답! 책상에서 연필을 찾았어요!";
+
+  reward(35,35);
+ }else{
+  document.getElementById("detectiveResult").innerHTML=
+  "❌ 아직 못 찾았어요. 마지막으로 사용한 장소를 생각해 보세요.";
+ }
+}
+
+
+update();
+
+</script>
+
+</body>
+</html>
