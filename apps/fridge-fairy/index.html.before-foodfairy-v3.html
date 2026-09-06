@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>음식요정 V3</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:"Noto Sans KR","Malgun Gothic",sans-serif;
+    background:linear-gradient(135deg,#e0f7fa,#f3e5f5);
+    color:#333;
+}
+
+.app{
+    max-width:1000px;
+    margin:auto;
+    padding:16px;
+}
+
+header{
+    background:white;
+    border-radius:28px;
+    padding:24px;
+    text-align:center;
+    box-shadow:0 8px 25px rgba(0,0,0,.1);
+}
+
+.fairy{
+    font-size:65px;
+}
+
+h1{
+    margin:5px 0;
+    font-size:34px;
+}
+
+header p{
+    color:#777;
+}
+
+.home{
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 17px;
+    border-radius:14px;
+    background:#eee;
+    color:#333;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.card{
+    background:white;
+    border-radius:24px;
+    padding:20px;
+    margin-top:17px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+h2{
+    margin-top:0;
+}
+
+button{
+    border:0;
+    border-radius:14px;
+    padding:13px 17px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    background:#7c4dff;
+    color:white;
+    margin:4px;
+}
+
+button:active{
+    transform:scale(.97);
+}
+
+input,select{
+    width:100%;
+    padding:13px;
+    border:2px solid #eee;
+    border-radius:13px;
+    font-size:16px;
+    margin:5px 0 12px;
+}
+
+.camera{
+    background:#f8f5ff;
+    border:3px dashed #b39ddb;
+    border-radius:20px;
+    padding:15px;
+    text-align:center;
+}
+
+video{
+    display:block;
+    width:100%;
+    max-height:430px;
+    object-fit:cover;
+    background:#222;
+    border-radius:18px;
+}
+
+.preview{
+    display:none;
+    width:100%;
+    max-height:400px;
+    object-fit:contain;
+    border-radius:18px;
+    margin-top:10px;
+}
+
+.camera-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:10px;
+}
+
+.status{
+    display:none;
+    margin-top:12px;
+    padding:14px;
+    border-radius:15px;
+    background:#eee8ff;
+    font-weight:bold;
+}
+
+.manual{
+    display:none;
+    margin-top:15px;
+    padding:18px;
+    background:#fff8e1;
+    border:2px solid #ffd54f;
+    border-radius:18px;
+}
+
+.manual h3{
+    margin-top:0;
+}
+
+.food-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+.food{
+    background:#f8fafb;
+    border:2px solid #eee;
+    border-radius:19px;
+    padding:16px;
+}
+
+.food-icon{
+    font-size:42px;
+}
+
+.food-name{
+    font-size:19px;
+    font-weight:bold;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.good{
+    background:#d9f7df;
+    color:#218838;
+}
+
+.soon{
+    background:#fff0c2;
+    color:#a56b00;
+}
+
+.bad{
+    background:#ffdada;
+    color:#c62828;
+}
+
+.eat{
+    background:#43a047;
+}
+
+.delete{
+    background:#ef5350;
+}
+
+.organize{
+    background:#00897b;
+}
+
+.ai-result{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:13px;
+    margin-top:8px;
+    border-radius:15px;
+    background:#f8f9fa;
+    border:2px solid #eee;
+}
+
+.recipe{
+    background:#fff8e1;
+    border-radius:18px;
+    padding:17px;
+    margin-top:12px;
+}
+
+.ok{
+    color:#218838;
+    font-weight:bold;
+}
+
+.missing{
+    color:#c62828;
+    font-weight:bold;
+}
+
+.empty{
+    text-align:center;
+    padding:30px;
+    color:#999;
+}
+
+@media(max-width:700px){
+    .food-grid{
+        grid-template-columns:1fr;
+    }
+
+    h1{
+        font-size:28px;
+    }
+
+    .camera-buttons button{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+<div class="fairy">🧚‍♀️</div>
+
+<h1>음식요정 V3</h1>
+
+<p>
+음식 사진을 보여주면 음식요정이 알아볼 준비를 해요!
+</p>
+
+<a class="home" href="../../index.html">
+🏠 메인으로
+</a>
+
+</header>
+
+
+<!-- AI 카메라 -->
+
+<div class="card">
+
+<h2>📷 AI 음식 카메라</h2>
+
+<p>
+음식을 카메라에 보여주세요.
+<br>
+AI가 사진 속 음식 이름을 찾아볼 거예요. 🤖
+</p>
+
+<div class="camera">
+
+<video id="camera" autoplay playsinline></video>
+
+<canvas id="canvas" style="display:none"></canvas>
+
+<img id="preview" class="preview">
+
+<div class="camera-buttons">
+
+<button onclick="startCamera()">
+📷 카메라 켜기
+</button>
+
+<button onclick="takePhoto()">
+📸 사진 찍기
+</button>
+
+<button onclick="stopCamera()">
+⏹️ 카메라 끄기
+</button>
+
+</div>
+
+<div id="status" class="status"></div>
+
+</div>
+
+
+<!-- AI 결과 -->
+
+<div id="aiResults"></div>
+
+
+<!-- 직접 입력 -->
+
+<div id="manualBox" class="manual">
+
+<h3>✏️ 직접 적어도 돼요!</h3>
+
+<p>
+사진을 정확하게 알아보지 못했어요.
+<br>
+괜찮아요! 음식 이름을 직접 적어주세요. 😊
+</p>
+
+<label>음식 이름</label>
+
+<input
+id="manualName"
+placeholder="예: 참기름"
+>
+
+<label>수량</label>
+
+<input
+id="manualAmount"
+type="number"
+min="1"
+value="1"
+>
+
+<label>보관 위치</label>
+
+<select id="manualLocation">
+
+<option>🧊 냉장실</option>
+<option>❄️ 냉동실</option>
+<option>🚪 냉장고 문</option>
+<option>🗄️ 식품 서랍</option>
+
+</select>
+
+<label>유통기한</label>
+
+<input
+id="manualExpiry"
+type="date"
+>
+
+<button onclick="addManualFood()">
+➕ 음식 추가하기
+</button>
+
+</div>
+
+</div>
+
+
+<!-- 직접 추가 -->
+
+<div class="card">
+
+<h2>✏️ 음식 직접 추가</h2>
+
+<label>음식 이름</label>
+
+<input
+id="foodName"
+placeholder="예: 계란"
+>
+
+<label>수량</label>
+
+<input
+id="foodAmount"
+type="number"
+min="1"
+value="1"
+>
+
+<label>보관 위치</label>
+
+<select id="foodLocation">
+
+<option>🧊 냉장실</option>
+<option>❄️ 냉동실</option>
+<option>🚪 냉장고 문</option>
+<option>🗄️ 식품 서랍</option>
+
+</select>
+
+<label>유통기한</label>
+
+<input
+id="foodExpiry"
+type="date"
+>
+
+<button onclick="addFood()">
+➕ 음식 넣기
+</button>
+
+</div>
+
+
+<!-- 음식 목록 -->
+
+<div class="card">
+
+<h2>🧊 내 음식</h2>
+
+<button
+class="organize"
+onclick="organizeFood()"
+>
+🧹 음식 정리
+</button>
+
+<div id="foodList"></div>
+
+</div>
+
+
+<!-- 오늘 뭐 먹지 -->
+
+<div class="card">
+
+<h2>🍳 오늘 뭐 먹지?</h2>
+
+<p>
+현재 가지고 있는 재료를 확인해서
+<br>
+<strong>실제로 만들 수 있는 메뉴만</strong>
+추천해요.
+</p>
+
+<button onclick="recommendRecipes()">
+🍳 메뉴 추천
+</button>
+
+<div id="recipeList"></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================
+   데이터
+===================== */
+
+let data =
+JSON.parse(
+localStorage.getItem("foodFairyV3")
+) || {
+    foods:[]
+};
+
+function save(){
+
+    localStorage.setItem(
+        "foodFairyV3",
+        JSON.stringify(data)
+    );
+}
+
+
+/* =====================
+   날짜
+===================== */
+
+function daysLeft(date){
+
+    if(!date) return 9999;
+
+    let now=new Date();
+
+    now.setHours(0,0,0,0);
+
+    let target=
+        new Date(date+"T00:00:00");
+
+    return Math.ceil(
+        (target-now)/
+        86400000
+    );
+}
+
+
+/* =====================
+   음식 아이콘
+===================== */
+
+function foodIcon(name){
+
+    let n=name.replace(/\s/g,"");
+
+    if(n.includes("계란")||n.includes("달걀"))
+        return "🥚";
+
+    if(n.includes("우유"))
+        return "🥛";
+
+    if(n.includes("참기름"))
+        return "🫙";
+
+    if(n.includes("간장"))
+        return "🧂";
+
+    if(n.includes("사과"))
+        return "🍎";
+
+    if(n.includes("바나나"))
+        return "🍌";
+
+    if(n.includes("딸기"))
+        return "🍓";
+
+    if(n.includes("토마토"))
+        return "🍅";
+
+    if(n.includes("감자"))
+        return "🥔";
+
+    if(n.includes("양파"))
+        return "🧅";
+
+    if(n.includes("당근"))
+        return "🥕";
+
+    if(n.includes("김치"))
+        return "🥬";
+
+    if(n.includes("라면"))
+        return "🍜";
+
+    if(n.includes("밥")||n.includes("쌀"))
+        return "🍚";
+
+    if(n.includes("빵"))
+        return "🍞";
+
+    if(n.includes("치즈"))
+        return "🧀";
+
+    return "🥫";
+}
+
+
+/* =====================
+   안전한 HTML
+===================== */
+
+function escapeHTML(text){
+
+    return String(text).replace(
+        /[&<>"']/g,
+        function(x){
+
+            return {
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#039;"
+            }[x];
+
+        }
+    );
+}
+
+
+/* =====================
+   음식 추가
+===================== */
+
+function addFoodObject(
+    name,
+    amount,
+    location,
+    expiry
+){
+
+    name=name.trim();
+
+    if(!name){
+
+        alert("음식 이름을 적어주세요!");
+
+        return false;
+    }
+
+    if(!expiry){
+
+        alert("유통기한을 선택해주세요!");
+
+        return false;
+    }
+
+    data.foods.push({
+
+        id:
+        Date.now()+
+        Math.random(),
+
+        name:name,
+
+        amount:
+        Math.max(
+            1,
+            Number(amount)||1
+        ),
+
+        location:location,
+
+        expiry:expiry
+
+    });
+
+    save();
+
+    renderFoods();
+
+    return true;
+}
+
+
+function addFood(){
+
+    let name=
+    document.getElementById(
+        "foodName"
+    ).value;
+
+    let amount=
+    document.getElementById(
+        "foodAmount"
+    ).value;
+
+    let location=
+    document.getElementById(
+        "foodLocation"
+    ).value;
+
+    let expiry=
+    document.getElementById(
+        "foodExpiry"
+    ).value;
+
+    if(
+        addFoodObject(
+            name,
+            amount,
+            location,
+            expiry
+        )
+    ){
+
+        document.getElementById(
+            "foodName"
+        ).value="";
+
+        alert(
+            "🥕 "+
+            name.trim()+
+            "을(를) 추가했어요!"
+        );
+    }
+}
+
+
+function addManualFood(){
+
+    let name=
+    document.getElementById(
+        "manualName"
+    ).value;
+
+    let amount=
+    document.getElementById(
+        "manualAmount"
+    ).value;
+
+    let location=
+    document.getElementById(
+        "manualLocation"
+    ).value;
+
+    let expiry=
+    document.getElementById(
+        "manualExpiry"
+    ).value;
+
+    if(
+        addFoodObject(
+            name,
+            amount,
+            location,
+            expiry
+        )
+    ){
+
+        document.getElementById(
+            "manualName"
+        ).value="";
+
+        document.getElementById(
+            "manualBox"
+        ).style.display="none";
+
+        showStatus(
+            "✅ 직접 입력한 음식이 추가됐어요!"
+        );
+    }
+}
+
+
+/* =====================
+   1개 먹음
+===================== */
+
+function eatOne(id){
+
+    let food=
+    data.foods.find(
+        f=>f.id===id
+    );
+
+    if(!food)return;
+
+    if(food.amount<=0){
+
+        alert(
+            "😋 이 음식은 이미 다 먹었어요!"
+        );
+
+        return;
+    }
+
+    food.amount--;
+
+    save();
+
+    renderFoods();
+
+    if(food.amount===0){
+
+        alert(
+            "🍽️ "+
+            food.name+
+            "을(를) 다 먹었어요!"
+        );
+    }
+}
+
+
+/* =====================
+   삭제
+===================== */
+
+function deleteFood(id){
+
+    let food=
+    data.foods.find(
+        f=>f.id===id
+    );
+
+    if(!food)return;
+
+    if(
+        !confirm(
+            food.name+
+            "을(를) 삭제할까요?"
+        )
+    )return;
+
+    data.foods=
+    data.foods.filter(
+        f=>f.id!==id
+    );
+
+    save();
+
+    renderFoods();
+}
+
+
+/* =====================
+   음식 정리
+===================== */
+
+function organizeFood(){
+
+    data.foods.sort(
+        (a,b)=>
+        daysLeft(a.expiry)-
+        daysLeft(b.expiry)
+    );
+
+    save();
+
+    renderFoods();
+
+    alert(
+        "🧹 음식 정리 완료!\n"+
+        "유통기한이 가까운 음식부터 정리했어요."
+    );
+}
+
+
+/* =====================
+   음식 화면
+===================== */
+
+function renderFoods(){
+
+    let box=
+    document.getElementById(
+        "foodList"
+    );
+
+    if(data.foods.length===0){
+
+        box.innerHTML=
+        '<div class="empty">'+
+        '아직 음식이 없어요 🥕<br>'+
+        '카메라로 음식 사진을 찍어보세요!'+
+        '</div>';
+
+        return;
+    }
+
+    let locations=[
+        "🧊 냉장실",
+        "❄️ 냉동실",
+        "🚪 냉장고 문",
+        "🗄️ 식품 서랍"
+    ];
+
+    box.innerHTML="";
+
+    locations.forEach(location=>{
+
+        let foods=
+        data.foods.filter(
+            f=>f.location===location
+        );
+
+        if(foods.length===0)return;
+
+        let title=
+        document.createElement("h3");
+
+        title.textContent=location;
+
+        box.appendChild(title);
+
+        let grid=
+        document.createElement("div");
+
+        grid.className="food-grid";
+
+        foods.forEach(food=>{
+
+            let d=
+            daysLeft(food.expiry);
+
+            let cls=
+            d<0
+            ?"bad"
+            :d<=3
+            ?"soon"
+            :"good";
+
+            let text=
+            d<0
+            ?"유통기한 지남"
+            :d===0
+            ?"오늘까지"
+            :"D-"+d;
+
+            let div=
+            document.createElement("div");
+
+            div.className="food";
+
+            div.innerHTML=
+
+            '<div class="food-icon">'+
+            foodIcon(food.name)+
+            '</div>'+
+
+            '<div class="food-name">'+
+            escapeHTML(food.name)+
+            '</div>'+
+
+            '<p>📦 '+
+            food.amount+
+            '개</p>'+
+
+            '<span class="badge '+cls+'">'+
+            text+
+            '</span>'+
+
+            '<p>📅 '+
+            food.expiry+
+            '</p>'+
+
+            '<button class="eat" '+
+            'onclick="eatOne('+food.id+')">'+
+            '🍽️ 1개 먹음'+
+            '</button>'+
+
+            '<button class="delete" '+
+            'onclick="deleteFood('+food.id+')">'+
+            '🗑️ 삭제'+
+            '</button>';
+
+            grid.appendChild(div);
+
+        });
+
+        box.appendChild(grid);
+
+    });
+}
+
+
+/* =====================
+   카메라
+===================== */
+
+let stream=null;
+
+
+async function startCamera(){
+
+    try{
+
+        if(!navigator.mediaDevices){
+
+            throw new Error(
+                "카메라 기능을 사용할 수 없습니다."
+            );
+        }
+
+        stream=
+        await navigator.mediaDevices
+        .getUserMedia({
+
+            video:{
+                facingMode:{
+                    ideal:"environment"
+                }
+            },
+
+            audio:false
+
+        });
+
+        document.getElementById(
+            "camera"
+        ).srcObject=stream;
+
+        showStatus(
+            "📷 카메라가 켜졌어요! 음식이 잘 보이게 찍어주세요."
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showStatus(
+            "⚠️ 카메라를 사용할 수 없어요. 직접 적어도 돼요! 😊"
+        );
+
+        document.getElementById(
+            "manualBox"
+        ).style.display="block";
+    }
+}
+
+
+function stopCamera(){
+
+    if(stream){
+
+        stream.getTracks()
+        .forEach(
+            track=>track.stop()
+        );
+
+        stream=null;
+    }
+
+    document.getElementById(
+        "camera"
+    ).srcObject=null;
+}
+
+
+function takePhoto(){
+
+    if(!stream){
+
+        alert(
+            "먼저 📷 카메라 켜기를 눌러주세요!"
+        );
+
+        return;
+    }
+
+    let video=
+    document.getElementById(
+        "camera"
+    );
+
+    let canvas=
+    document.getElementById(
+        "canvas"
+    );
+
+    canvas.width=
+    video.videoWidth;
+
+    canvas.height=
+    video.videoHeight;
+
+    let ctx=
+    canvas.getContext("2d");
+
+    ctx.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    let image=
+    canvas.toDataURL(
+        "image/jpeg",
+        .82
+    );
+
+    document.getElementById(
+        "preview"
+    ).src=image;
+
+    document.getElementById(
+        "preview"
+    ).style.display="block";
+
+    /*
+       다음 단계에서 이 사진을
+       실제 AI 서버로 보내게 됩니다.
+    */
+
+    showStatus(
+        "📸 사진을 찍었어요!\n"+
+        "다음 단계에서 이 사진을 AI가 분석하도록 연결할 수 있어요."
+    );
+
+    document.getElementById(
+        "manualBox"
+    ).style.display="block";
+}
+
+
+/* =====================
+   상태 표시
+===================== */
+
+function showStatus(text){
+
+    let box=
+    document.getElementById(
+        "status"
+    );
+
+    box.style.display="block";
+
+    box.textContent=text;
+}
+
+
+/* =====================
+   레시피
+===================== */
+
+const recipes=[
+
+{
+    name:"🍳 간장계란밥",
+
+    required:[
+        "밥",
+        "계란",
+        "간장",
+        "참기름"
+    ]
+},
+
+{
+    name:"🍅 토마토 계란볶음",
+
+    required:[
+        "토마토",
+        "계란",
+        "식용유"
+    ]
+},
+
+{
+    name:"🥔 감자볶음",
+
+    required:[
+        "감자",
+        "식용유",
+        "소금"
+    ]
+},
+
+{
+    name:"🍜 라면",
+
+    required:[
+        "라면",
+        "물"
+    ]
+}
+
+];
+
+
+function normalize(name){
+
+    return name
+    .replace(/\s/g,"")
+    .toLowerCase();
+}
+
+
+function hasFood(required){
+
+    return data.foods.some(
+        food=>
+        food.amount>0 &&
+        normalize(food.name)
+        .includes(
+            normalize(required)
+        )
+    );
+}
+
+
+function recommendRecipes(){
+
+    let box=
+    document.getElementById(
+        "recipeList"
+    );
+
+    let html="";
+
+    recipes.forEach(recipe=>{
+
+        let missing=
+        recipe.required.filter(
+            x=>!hasFood(x)
+        );
+
+        let available=
+        recipe.required.filter(
+            x=>hasFood(x)
+        );
+
+        html+=
+        '<div class="recipe">'+
+
+        '<h3>'+
+        recipe.name+
+        '</h3>';
+
+        recipe.required.forEach(req=>{
+
+            let ok=
+            hasFood(req);
+
+            html+=
+            '<p class="'+
+            (ok?"ok":"missing")+
+            '">'+
+
+            (ok?"✅ ":"❌ ")+
+
+            escapeHTML(req)+
+
+            '</p>';
+
+        });
+
+        if(missing.length===0){
+
+            html+=
+            '<p class="ok">'+
+            '🎉 지금 가지고 있는 재료로 만들 수 있어요!'+
+            '</p>';
+
+        }else{
+
+            html+=
+            '<p class="missing">'+
+            '⚠️ 부족한 재료: '+
+            missing
+            .map(escapeHTML)
+            .join(", ")+
+            '</p>';
+
+        }
+
+        html+='</div>';
+
+    });
+
+    box.innerHTML=html;
+}
+
+
+/* =====================
+   시작
+===================== */
+
+renderFoods();
+
+</script>
+
+</body>
+</html>

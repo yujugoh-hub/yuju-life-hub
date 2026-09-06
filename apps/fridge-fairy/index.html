@@ -2,253 +2,380 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>음식요정 V3</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🧚 음식요정 V4</title>
 
 <style>
 *{box-sizing:border-box}
 
 body{
-    margin:0;
-    font-family:"Noto Sans KR","Malgun Gothic",sans-serif;
-    background:linear-gradient(135deg,#e0f7fa,#f3e5f5);
-    color:#333;
+margin:0;
+font-family:"Malgun Gothic","Noto Sans KR",sans-serif;
+background:linear-gradient(135deg,#dff7ff,#f8e8ff);
+color:#263238;
 }
 
 .app{
-    max-width:1000px;
-    margin:auto;
-    padding:16px;
+max-width:1150px;
+margin:auto;
+padding:15px;
 }
 
 header{
-    background:white;
-    border-radius:28px;
-    padding:24px;
-    text-align:center;
-    box-shadow:0 8px 25px rgba(0,0,0,.1);
+background:#fff;
+border-radius:28px;
+padding:22px;
+text-align:center;
+box-shadow:0 8px 25px #0001;
 }
 
 .fairy{
-    font-size:65px;
+font-size:65px;
 }
 
 h1{
-    margin:5px 0;
-    font-size:34px;
+margin:3px 0;
+font-size:34px;
 }
 
 header p{
-    color:#777;
+color:#777;
 }
 
 .home{
-    display:inline-block;
-    margin-top:10px;
-    padding:10px 17px;
-    border-radius:14px;
-    background:#eee;
-    color:#333;
-    text-decoration:none;
-    font-weight:bold;
+display:inline-block;
+padding:10px 17px;
+border-radius:14px;
+background:#eee;
+color:#333;
+text-decoration:none;
+font-weight:bold;
 }
 
 .card{
-    background:white;
-    border-radius:24px;
-    padding:20px;
-    margin-top:17px;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-}
-
-h2{
-    margin-top:0;
+background:#fff;
+border-radius:25px;
+padding:20px;
+margin-top:18px;
+box-shadow:0 8px 25px #0001;
 }
 
 button{
-    border:0;
-    border-radius:14px;
-    padding:13px 17px;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    background:#7c4dff;
-    color:white;
-    margin:4px;
+border:0;
+border-radius:14px;
+padding:12px 16px;
+margin:4px;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+background:#7c4dff;
+color:#fff;
 }
 
 button:active{
-    transform:scale(.97);
+transform:scale(.96);
 }
+
+.green{background:#43a047}
+.red{background:#ef5350}
+.blue{background:#2196f3}
+.orange{background:#fb8c00}
+.pink{background:#ec407a}
+.teal{background:#00897b}
 
 input,select{
-    width:100%;
-    padding:13px;
-    border:2px solid #eee;
-    border-radius:13px;
-    font-size:16px;
-    margin:5px 0 12px;
+width:100%;
+padding:13px;
+border:2px solid #eee;
+border-radius:13px;
+font-size:16px;
+margin:5px 0 12px;
 }
 
-.camera{
-    background:#f8f5ff;
-    border:3px dashed #b39ddb;
-    border-radius:20px;
-    padding:15px;
-    text-align:center;
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
 }
 
-video{
-    display:block;
-    width:100%;
-    max-height:430px;
-    object-fit:cover;
-    background:#222;
-    border-radius:18px;
+/* =========================
+   보관함
+========================= */
+
+.storage{
+display:grid;
+grid-template-columns:1.5fr 1fr;
+gap:18px;
 }
 
-.preview{
-    display:none;
-    width:100%;
-    max-height:400px;
-    object-fit:contain;
-    border-radius:18px;
-    margin-top:10px;
+/* 냉장고 */
+
+.fridge{
+position:relative;
+min-height:590px;
+border-radius:35px;
+padding:14px;
+border:8px solid #90a4ae;
+background:linear-gradient(
+90deg,
+#dcecf1,
+#fff 20%,
+#edf7fa 50%,
+#fff 80%,
+#dcecf1
+);
+box-shadow:inset 0 0 25px #607d8b55;
 }
 
-.camera-buttons{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    margin-top:10px;
+.fridge-title{
+height:60px;
+border:2px solid #cfd8dc;
+border-radius:18px;
+background:linear-gradient(#fff,#e8eef0);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:23px;
+font-weight:bold;
 }
 
-.status{
-    display:none;
-    margin-top:12px;
-    padding:14px;
-    border-radius:15px;
-    background:#eee8ff;
-    font-weight:bold;
+.fridge-light{
+position:absolute;
+right:25px;
+top:28px;
+width:12px;
+height:12px;
+border-radius:50%;
+background:#ef5350;
 }
 
-.manual{
-    display:none;
-    margin-top:15px;
-    padding:18px;
-    background:#fff8e1;
-    border:2px solid #ffd54f;
-    border-radius:18px;
+.shelf{
+margin-top:12px;
+padding:10px;
+border:3px solid #cfd8dc;
+border-radius:18px;
+background:#ffffffcc;
+min-height:180px;
 }
 
-.manual h3{
-    margin-top:0;
+.shelf-title{
+font-weight:bold;
+font-size:14px;
+color:#607d8b;
+margin-bottom:8px;
 }
+
+/* 서랍 */
+
+.pantry{
+min-height:590px;
+padding:15px;
+border-radius:32px;
+background:
+linear-gradient(
+135deg,
+#c78b55,
+#e3b47e,
+#bd7d45
+);
+border:7px solid #9a6338;
+box-shadow:
+inset 0 0 25px #70452255,
+0 8px 15px #0002;
+}
+
+.pantry-title{
+background:#86542f;
+color:white;
+border-radius:18px;
+padding:16px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+box-shadow:inset 0 -5px #633c22;
+}
+
+.handle{
+width:110px;
+height:11px;
+border-radius:10px;
+background:#633c22;
+margin:12px auto 18px;
+}
+
+.pantry-inside{
+background:#e4b47d;
+border:4px solid #aa6f3d;
+border-radius:20px;
+padding:12px;
+min-height:470px;
+box-shadow:inset 0 0 25px #70452244;
+}
+
+/* 음식 */
 
 .food-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:14px;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:9px;
+}
+
+.pantry .food-grid{
+grid-template-columns:repeat(2,1fr);
 }
 
 .food{
-    background:#f8fafb;
-    border:2px solid #eee;
-    border-radius:19px;
-    padding:16px;
+background:#fff;
+border:2px solid #e5e5e5;
+border-radius:16px;
+padding:10px;
+min-height:175px;
+box-shadow:0 4px 9px #0001;
 }
 
 .food-icon{
-    font-size:42px;
+font-size:38px;
+text-align:center;
 }
 
 .food-name{
-    font-size:19px;
-    font-weight:bold;
+font-weight:bold;
+font-size:16px;
+text-align:center;
+margin-top:4px;
+word-break:keep-all;
+}
+
+.amount{
+text-align:center;
+font-size:14px;
+margin:5px;
 }
 
 .badge{
-    display:inline-block;
-    padding:5px 9px;
-    border-radius:10px;
-    font-size:13px;
-    font-weight:bold;
+display:block;
+width:max-content;
+margin:5px auto;
+padding:5px 8px;
+border-radius:9px;
+font-size:11px;
+font-weight:bold;
 }
 
-.good{
-    background:#d9f7df;
-    color:#218838;
+.fresh{
+background:#d9f7df;
+color:#218838;
 }
 
 .soon{
-    background:#fff0c2;
-    color:#a56b00;
+background:#fff0c2;
+color:#a56b00;
 }
 
-.bad{
-    background:#ffdada;
-    color:#c62828;
+.danger{
+background:#ffdada;
+color:#c62828;
 }
 
-.eat{
-    background:#43a047;
+.food-buttons{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
 }
 
-.delete{
-    background:#ef5350;
+.food-buttons button{
+font-size:11px;
+padding:7px 8px;
 }
 
-.organize{
-    background:#00897b;
+/* 카메라 */
+
+.camera-box{
+background:#f7f3ff;
+border:3px dashed #b39ddb;
+border-radius:20px;
+padding:15px;
+text-align:center;
 }
 
-.ai-result{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding:13px;
-    margin-top:8px;
-    border-radius:15px;
-    background:#f8f9fa;
-    border:2px solid #eee;
+video{
+width:100%;
+max-height:400px;
+background:#222;
+border-radius:18px;
+object-fit:cover;
 }
+
+#preview{
+display:none;
+width:100%;
+max-height:400px;
+object-fit:contain;
+border-radius:18px;
+margin-top:10px;
+}
+
+.status{
+display:none;
+background:#ede7f6;
+padding:13px;
+border-radius:14px;
+margin-top:10px;
+font-weight:bold;
+}
+
+/* 레시피 */
 
 .recipe{
-    background:#fff8e1;
-    border-radius:18px;
-    padding:17px;
-    margin-top:12px;
+background:#fff8e1;
+border:2px solid #ffe082;
+border-radius:18px;
+padding:16px;
+margin-top:12px;
 }
 
 .ok{
-    color:#218838;
-    font-weight:bold;
+color:#2e7d32;
+font-weight:bold;
 }
 
-.missing{
-    color:#c62828;
-    font-weight:bold;
+.no{
+color:#c62828;
+font-weight:bold;
 }
 
 .empty{
-    text-align:center;
-    padding:30px;
-    color:#999;
+text-align:center;
+padding:28px 8px;
+color:#777;
 }
 
-@media(max-width:700px){
-    .food-grid{
-        grid-template-columns:1fr;
-    }
+@media(max-width:760px){
 
-    h1{
-        font-size:28px;
-    }
+.storage{
+grid-template-columns:1fr;
+}
 
-    .camera-buttons button{
-        width:100%;
-    }
+.food-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
+.pantry .food-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
+.form-grid{
+grid-template-columns:1fr;
+}
+
+h1{
+font-size:28px;
+}
+
+.fridge,.pantry{
+min-height:500px;
+}
+
 }
 </style>
 </head>
@@ -261,10 +388,10 @@ video{
 
 <div class="fairy">🧚‍♀️</div>
 
-<h1>음식요정 V3</h1>
+<h1>음식요정 V4</h1>
 
 <p>
-음식 사진을 보여주면 음식요정이 알아볼 준비를 해요!
+냉장고와 식품 서랍 속 음식을 한눈에 관리해요!
 </p>
 
 <a class="home" href="../../index.html">
@@ -274,81 +401,123 @@ video{
 </header>
 
 
-<!-- AI 카메라 -->
+<!-- 음식 추가 -->
 
 <div class="card">
 
-<h2>📷 AI 음식 카메라</h2>
+<h2>➕ 음식 추가</h2>
+
+<div class="form-grid">
+
+<div>
+<label>음식 이름</label>
+<input id="foodName" placeholder="예: 계란">
+</div>
+
+<div>
+<label>수량</label>
+<input id="foodAmount" type="number" min="1" value="1">
+</div>
+
+</div>
+
+<div class="form-grid">
+
+<div>
+<label>보관 위치</label>
+
+<select id="location">
+
+<option>🧊 냉장실</option>
+<option>❄️ 냉동실</option>
+<option>🚪 냉장고 문</option>
+<option>🗄️ 식품 서랍</option>
+
+</select>
+</div>
+
+<div>
+<label>유통기한</label>
+<input id="expiry" type="date">
+</div>
+
+</div>
+
+<button onclick="addFood()">
+➕ 음식 넣기
+</button>
+
+</div>
+
+
+<!-- 카메라 -->
+
+<div class="card">
+
+<h2>📷 음식 카메라</h2>
 
 <p>
-음식을 카메라에 보여주세요.
-<br>
-AI가 사진 속 음식 이름을 찾아볼 거예요. 🤖
+음식을 찍으면 다음 단계에서 AI 음식 인식과 연결할 수 있어요.
 </p>
 
-<div class="camera">
+<div class="camera-box">
 
 <video id="camera" autoplay playsinline></video>
 
 <canvas id="canvas" style="display:none"></canvas>
 
-<img id="preview" class="preview">
+<img id="preview">
 
-<div class="camera-buttons">
+<br>
 
-<button onclick="startCamera()">
+<button class="blue" onclick="startCamera()">
 📷 카메라 켜기
 </button>
 
-<button onclick="takePhoto()">
+<button class="pink" onclick="takePhoto()">
 📸 사진 찍기
 </button>
 
-<button onclick="stopCamera()">
-⏹️ 카메라 끄기
+<button class="red" onclick="stopCamera()">
+⏹️ 끄기
 </button>
 
-</div>
-
-<div id="status" class="status"></div>
+<div id="cameraStatus" class="status"></div>
 
 </div>
 
-
-<!-- AI 결과 -->
-
-<div id="aiResults"></div>
-
-
-<!-- 직접 입력 -->
-
-<div id="manualBox" class="manual">
+<div
+id="manualBox"
+style="
+display:none;
+margin-top:15px;
+padding:16px;
+background:#fff8e1;
+border-radius:18px;
+">
 
 <h3>✏️ 직접 적어도 돼요!</h3>
 
 <p>
-사진을 정확하게 알아보지 못했어요.
-<br>
-괜찮아요! 음식 이름을 직접 적어주세요. 😊
+카메라가 음식을 알아보지 못하면
+직접 음식 이름을 적을 수 있어요. 😊
 </p>
 
-<label>음식 이름</label>
+<input id="manualName" placeholder="예: 참기름">
 
-<input
-id="manualName"
-placeholder="예: 참기름"
->
+<div class="form-grid">
 
+<div>
 <label>수량</label>
+<input id="manualAmount" type="number" min="1" value="1">
+</div>
 
-<input
-id="manualAmount"
-type="number"
-min="1"
-value="1"
->
+<div>
+<label>유통기한</label>
+<input id="manualExpiry" type="date">
+</div>
 
-<label>보관 위치</label>
+</div>
 
 <select id="manualLocation">
 
@@ -359,15 +528,8 @@ value="1"
 
 </select>
 
-<label>유통기한</label>
-
-<input
-id="manualExpiry"
-type="date"
->
-
-<button onclick="addManualFood()">
-➕ 음식 추가하기
+<button class="pink" onclick="addManualFood()">
+➕ 음식 추가
 </button>
 
 </div>
@@ -375,67 +537,90 @@ type="date"
 </div>
 
 
-<!-- 직접 추가 -->
+<!-- 보관함 -->
 
 <div class="card">
 
-<h2>✏️ 음식 직접 추가</h2>
+<div style="
+display:flex;
+align-items:center;
+gap:8px;
+">
 
-<label>음식 이름</label>
+<h2 style="margin-right:auto">
+🏠 음식 보관함
+</h2>
 
-<input
-id="foodName"
-placeholder="예: 계란"
->
-
-<label>수량</label>
-
-<input
-id="foodAmount"
-type="number"
-min="1"
-value="1"
->
-
-<label>보관 위치</label>
-
-<select id="foodLocation">
-
-<option>🧊 냉장실</option>
-<option>❄️ 냉동실</option>
-<option>🚪 냉장고 문</option>
-<option>🗄️ 식품 서랍</option>
-
-</select>
-
-<label>유통기한</label>
-
-<input
-id="foodExpiry"
-type="date"
->
-
-<button onclick="addFood()">
-➕ 음식 넣기
+<button class="teal" onclick="organizeFood()">
+🧹 냉장고 정리
 </button>
 
 </div>
 
 
-<!-- 음식 목록 -->
+<div class="storage">
 
-<div class="card">
+<!-- 냉장고 -->
 
-<h2>🧊 내 음식</h2>
+<div class="fridge">
 
-<button
-class="organize"
-onclick="organizeFood()"
->
-🧹 음식 정리
-</button>
+<div class="fridge-light"></div>
 
-<div id="foodList"></div>
+<div class="fridge-title">
+🧊 냉장고
+</div>
+
+<div class="shelf">
+
+<div class="shelf-title">
+❄️ 냉장실 / 냉동실
+</div>
+
+<div id="fridgeList" class="food-grid"></div>
+
+</div>
+
+<div class="shelf">
+
+<div class="shelf-title">
+🚪 냉장고 문
+</div>
+
+<div id="doorList" class="food-grid"></div>
+
+</div>
+
+</div>
+
+
+<!-- 식품 서랍 -->
+
+<div class="pantry">
+
+<div class="pantry-title">
+🗄️ 식품 서랍
+</div>
+
+<div class="handle"></div>
+
+<div class="pantry-inside">
+
+<div style="
+text-align:center;
+font-size:13px;
+font-weight:bold;
+margin-bottom:10px;
+">
+🍚 상온 보관 음식
+</div>
+
+<div id="pantryList" class="food-grid"></div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
@@ -447,17 +632,15 @@ onclick="organizeFood()"
 <h2>🍳 오늘 뭐 먹지?</h2>
 
 <p>
-현재 가지고 있는 재료를 확인해서
-<br>
-<strong>실제로 만들 수 있는 메뉴만</strong>
-추천해요.
+현재 남아 있는 음식만 확인해서
+<strong>실제로 필요한 재료가 모두 있는 메뉴</strong>를 찾아요.
 </p>
 
-<button onclick="recommendRecipes()">
+<button class="orange" onclick="recommendFood()">
 🍳 메뉴 추천
 </button>
 
-<div id="recipeList"></div>
+<div id="recipeResult"></div>
 
 </div>
 
@@ -466,792 +649,894 @@ onclick="organizeFood()"
 
 <script>
 
-/* =====================
-   데이터
-===================== */
+/* =========================
+데이터
+========================= */
 
 let data =
 JSON.parse(
-localStorage.getItem("foodFairyV3")
-) || {
-    foods:[]
+localStorage.getItem("foodFairyV4")
+)
+||
+{
+foods:[]
 };
+
 
 function save(){
 
-    localStorage.setItem(
-        "foodFairyV3",
-        JSON.stringify(data)
-    );
+localStorage.setItem(
+"foodFairyV4",
+JSON.stringify(data)
+);
+
 }
 
 
-/* =====================
-   날짜
-===================== */
+/* =========================
+날짜
+========================= */
 
 function daysLeft(date){
 
-    if(!date) return 9999;
+if(!date)return 9999;
 
-    let now=new Date();
+const today=new Date();
 
-    now.setHours(0,0,0,0);
+today.setHours(0,0,0,0);
 
-    let target=
-        new Date(date+"T00:00:00");
+const target=
+new Date(date+"T00:00:00");
 
-    return Math.ceil(
-        (target-now)/
-        86400000
-    );
+return Math.ceil(
+(target-today)/86400000
+);
+
 }
 
 
-/* =====================
-   음식 아이콘
-===================== */
+function status(days){
 
-function foodIcon(name){
+if(days<0){
 
-    let n=name.replace(/\s/g,"");
+return{
+text:"유통기한 지남",
+cls:"danger"
+};
 
-    if(n.includes("계란")||n.includes("달걀"))
-        return "🥚";
+}
 
-    if(n.includes("우유"))
-        return "🥛";
+if(days===0){
 
-    if(n.includes("참기름"))
-        return "🫙";
+return{
+text:"오늘까지",
+cls:"danger"
+};
 
-    if(n.includes("간장"))
-        return "🧂";
+}
 
-    if(n.includes("사과"))
-        return "🍎";
+if(days<=3){
 
-    if(n.includes("바나나"))
-        return "🍌";
+return{
+text:"D-"+days,
+cls:"soon"
+};
 
-    if(n.includes("딸기"))
-        return "🍓";
+}
 
-    if(n.includes("토마토"))
-        return "🍅";
+return{
+text:"D-"+days,
+cls:"fresh"
+};
 
-    if(n.includes("감자"))
-        return "🥔";
-
-    if(n.includes("양파"))
-        return "🧅";
-
-    if(n.includes("당근"))
-        return "🥕";
-
-    if(n.includes("김치"))
-        return "🥬";
-
-    if(n.includes("라면"))
-        return "🍜";
-
-    if(n.includes("밥")||n.includes("쌀"))
-        return "🍚";
-
-    if(n.includes("빵"))
-        return "🍞";
-
-    if(n.includes("치즈"))
-        return "🧀";
-
-    return "🥫";
 }
 
 
-/* =====================
-   안전한 HTML
-===================== */
+/* =========================
+아이콘
+========================= */
+
+function icon(name){
+
+const n=
+name.replace(/\s/g,"");
+
+if(n.includes("계란")||n.includes("달걀"))
+return"🥚";
+
+if(n.includes("우유"))
+return"🥛";
+
+if(n.includes("참기름"))
+return"🫙";
+
+if(n.includes("간장"))
+return"🧂";
+
+if(n.includes("밥")||n.includes("쌀"))
+return"🍚";
+
+if(n.includes("라면"))
+return"🍜";
+
+if(n.includes("김치"))
+return"🥬";
+
+if(n.includes("사과"))
+return"🍎";
+
+if(n.includes("바나나"))
+return"🍌";
+
+if(n.includes("딸기"))
+return"🍓";
+
+if(n.includes("토마토"))
+return"🍅";
+
+if(n.includes("감자"))
+return"🥔";
+
+if(n.includes("양파"))
+return"🧅";
+
+if(n.includes("당근"))
+return"🥕";
+
+if(n.includes("빵"))
+return"🍞";
+
+if(n.includes("치즈"))
+return"🧀";
+
+if(n.includes("고기"))
+return"🥩";
+
+if(n.includes("닭"))
+return"🍗";
+
+return"🥫";
+
+}
+
 
 function escapeHTML(text){
 
-    return String(text).replace(
-        /[&<>"']/g,
-        function(x){
+return String(text).replace(
+/[&<>"']/g,
+m=>({
 
-            return {
-                "&":"&amp;",
-                "<":"&lt;",
-                ">":"&gt;",
-                '"':"&quot;",
-                "'":"&#039;"
-            }[x];
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
 
-        }
-    );
+}[m])
+);
+
 }
 
 
-/* =====================
-   음식 추가
-===================== */
+/* =========================
+음식 추가
+========================= */
 
 function addFoodObject(
-    name,
-    amount,
-    location,
-    expiry
+name,
+amount,
+location,
+expiry
 ){
 
-    name=name.trim();
+name=name.trim();
 
-    if(!name){
+if(!name){
 
-        alert("음식 이름을 적어주세요!");
+alert("음식 이름을 적어주세요!");
 
-        return false;
-    }
+return false;
 
-    if(!expiry){
+}
 
-        alert("유통기한을 선택해주세요!");
+if(!expiry){
 
-        return false;
-    }
+alert("유통기한을 선택해주세요!");
 
-    data.foods.push({
+return false;
 
-        id:
-        Date.now()+
-        Math.random(),
+}
 
-        name:name,
+data.foods.push({
 
-        amount:
-        Math.max(
-            1,
-            Number(amount)||1
-        ),
+id:Date.now()+Math.random(),
 
-        location:location,
+name:name,
 
-        expiry:expiry
+amount:
+Math.max(
+1,
+Number(amount)||1
+),
 
-    });
+location:location,
 
-    save();
+expiry:expiry
 
-    renderFoods();
+});
 
-    return true;
+save();
+
+renderFoods();
+
+return true;
+
 }
 
 
 function addFood(){
 
-    let name=
-    document.getElementById(
-        "foodName"
-    ).value;
+const name=
+document.getElementById(
+"foodName"
+).value;
 
-    let amount=
-    document.getElementById(
-        "foodAmount"
-    ).value;
+const amount=
+document.getElementById(
+"foodAmount"
+).value;
 
-    let location=
-    document.getElementById(
-        "foodLocation"
-    ).value;
+const location=
+document.getElementById(
+"location"
+).value;
 
-    let expiry=
-    document.getElementById(
-        "foodExpiry"
-    ).value;
+const expiry=
+document.getElementById(
+"expiry"
+).value;
 
-    if(
-        addFoodObject(
-            name,
-            amount,
-            location,
-            expiry
-        )
-    ){
+if(
+addFoodObject(
+name,
+amount,
+location,
+expiry
+)
+){
 
-        document.getElementById(
-            "foodName"
-        ).value="";
+document.getElementById(
+"foodName"
+).value="";
 
-        alert(
-            "🥕 "+
-            name.trim()+
-            "을(를) 추가했어요!"
-        );
-    }
+alert(
+"🥕 "+
+name+
+"을(를) 넣었어요!"
+);
+
+}
+
 }
 
 
 function addManualFood(){
 
-    let name=
-    document.getElementById(
-        "manualName"
-    ).value;
+const name=
+document.getElementById(
+"manualName"
+).value;
 
-    let amount=
-    document.getElementById(
-        "manualAmount"
-    ).value;
+const amount=
+document.getElementById(
+"manualAmount"
+).value;
 
-    let location=
-    document.getElementById(
-        "manualLocation"
-    ).value;
+const location=
+document.getElementById(
+"manualLocation"
+).value;
 
-    let expiry=
-    document.getElementById(
-        "manualExpiry"
-    ).value;
+const expiry=
+document.getElementById(
+"manualExpiry"
+).value;
 
-    if(
-        addFoodObject(
-            name,
-            amount,
-            location,
-            expiry
-        )
-    ){
+if(
+addFoodObject(
+name,
+amount,
+location,
+expiry
+)
+){
 
-        document.getElementById(
-            "manualName"
-        ).value="";
+document.getElementById(
+"manualName"
+).value="";
 
-        document.getElementById(
-            "manualBox"
-        ).style.display="none";
+document.getElementById(
+"manualBox"
+).style.display="none";
 
-        showStatus(
-            "✅ 직접 입력한 음식이 추가됐어요!"
-        );
-    }
+cameraMessage(
+"✅ 직접 입력한 음식이 추가됐어요!"
+);
+
+}
+
 }
 
 
-/* =====================
-   1개 먹음
-===================== */
+/* =========================
+1개 먹음
+========================= */
 
 function eatOne(id){
 
-    let food=
-    data.foods.find(
-        f=>f.id===id
-    );
+const food=
+data.foods.find(
+f=>f.id===id
+);
 
-    if(!food)return;
+if(!food)return;
 
-    if(food.amount<=0){
+if(food.amount<=0){
 
-        alert(
-            "😋 이 음식은 이미 다 먹었어요!"
-        );
+alert("😋 이미 다 먹었어요!");
 
-        return;
-    }
+return;
 
-    food.amount--;
+}
 
-    save();
+food.amount--;
 
-    renderFoods();
+save();
 
-    if(food.amount===0){
+renderFoods();
 
-        alert(
-            "🍽️ "+
-            food.name+
-            "을(를) 다 먹었어요!"
-        );
-    }
+if(food.amount===0){
+
+alert(
+"🍽️ "+
+food.name+
+"을(를) 다 먹었어요!"
+);
+
+}
+
 }
 
 
-/* =====================
-   삭제
-===================== */
+/* =========================
+삭제
+========================= */
 
 function deleteFood(id){
 
-    let food=
-    data.foods.find(
-        f=>f.id===id
-    );
+const food=
+data.foods.find(
+f=>f.id===id
+);
 
-    if(!food)return;
+if(!food)return;
 
-    if(
-        !confirm(
-            food.name+
-            "을(를) 삭제할까요?"
-        )
-    )return;
+if(
+confirm(
+"🗑️ "+
+food.name+
+"을(를) 삭제할까요?"
+)
+){
 
-    data.foods=
-    data.foods.filter(
-        f=>f.id!==id
-    );
+data.foods=
+data.foods.filter(
+f=>f.id!==id
+);
 
-    save();
+save();
 
-    renderFoods();
+renderFoods();
+
+}
+
 }
 
 
-/* =====================
-   음식 정리
-===================== */
+/* =========================
+자동 정리
+========================= */
 
 function organizeFood(){
 
-    data.foods.sort(
-        (a,b)=>
-        daysLeft(a.expiry)-
-        daysLeft(b.expiry)
-    );
+data.foods.sort(
+(a,b)=>
+daysLeft(a.expiry)-
+daysLeft(b.expiry)
+);
 
-    save();
+save();
 
-    renderFoods();
+renderFoods();
 
-    alert(
-        "🧹 음식 정리 완료!\n"+
-        "유통기한이 가까운 음식부터 정리했어요."
-    );
+alert(
+"🧹 정리 완료!\n"+
+"유통기한이 가까운 음식부터 정리했어요."
+);
+
 }
 
 
-/* =====================
-   음식 화면
-===================== */
+/* =========================
+음식 카드
+========================= */
+
+function foodCard(food){
+
+const s=
+status(
+daysLeft(food.expiry)
+);
+
+return`
+
+<div class="food">
+
+<div class="food-icon">
+${icon(food.name)}
+</div>
+
+<div class="food-name">
+${escapeHTML(food.name)}
+</div>
+
+<div class="amount">
+📦 ${food.amount}개
+</div>
+
+<span class="badge ${s.cls}">
+${s.text}
+</span>
+
+<div style="
+text-align:center;
+font-size:11px;
+">
+📅 ${escapeHTML(food.expiry)}
+</div>
+
+<div class="food-buttons">
+
+<button
+class="green"
+onclick="eatOne(${food.id})"
+>
+🍽️ 1개 먹음
+</button>
+
+<button
+class="red"
+onclick="deleteFood(${food.id})"
+>
+🗑️ 삭제
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================
+그룹 표시
+========================= */
+
+function renderGroup(
+box,
+foods,
+message
+){
+
+if(foods.length===0){
+
+box.innerHTML=
+`
+<div class="empty">
+${message}
+</div>
+`;
+
+return;
+
+}
+
+box.innerHTML=
+foods
+.map(foodCard)
+.join("");
+
+}
+
+
+/* =========================
+음식 표시
+========================= */
 
 function renderFoods(){
 
-    let box=
-    document.getElementById(
-        "foodList"
-    );
+const fridge=
+document.getElementById(
+"fridgeList"
+);
 
-    if(data.foods.length===0){
+const door=
+document.getElementById(
+"doorList"
+);
 
-        box.innerHTML=
-        '<div class="empty">'+
-        '아직 음식이 없어요 🥕<br>'+
-        '카메라로 음식 사진을 찍어보세요!'+
-        '</div>';
+const pantry=
+document.getElementById(
+"pantryList"
+);
 
-        return;
-    }
 
-    let locations=[
-        "🧊 냉장실",
-        "❄️ 냉동실",
-        "🚪 냉장고 문",
-        "🗄️ 식품 서랍"
-    ];
+const foods=
+data.foods.filter(
+f=>f.amount>0
+);
 
-    box.innerHTML="";
 
-    locations.forEach(location=>{
+const fridgeFoods=
+foods.filter(
+f=>
+f.location==="🧊 냉장실" ||
+f.location==="❄️ 냉동실"
+);
 
-        let foods=
-        data.foods.filter(
-            f=>f.location===location
-        );
 
-        if(foods.length===0)return;
+const doorFoods=
+foods.filter(
+f=>
+f.location==="🚪 냉장고 문"
+);
 
-        let title=
-        document.createElement("h3");
 
-        title.textContent=location;
+const pantryFoods=
+foods.filter(
+f=>
+f.location==="🗄️ 식품 서랍"
+);
 
-        box.appendChild(title);
 
-        let grid=
-        document.createElement("div");
+renderGroup(
+fridge,
+fridgeFoods,
+"냉장고가 비어 있어요 🧊"
+);
 
-        grid.className="food-grid";
 
-        foods.forEach(food=>{
+renderGroup(
+door,
+doorFoods,
+"냉장고 문이 비어 있어요 🚪"
+);
 
-            let d=
-            daysLeft(food.expiry);
 
-            let cls=
-            d<0
-            ?"bad"
-            :d<=3
-            ?"soon"
-            :"good";
+renderGroup(
+pantry,
+pantryFoods,
+"식품 서랍이 비어 있어요 🗄️"
+);
 
-            let text=
-            d<0
-            ?"유통기한 지남"
-            :d===0
-            ?"오늘까지"
-            :"D-"+d;
-
-            let div=
-            document.createElement("div");
-
-            div.className="food";
-
-            div.innerHTML=
-
-            '<div class="food-icon">'+
-            foodIcon(food.name)+
-            '</div>'+
-
-            '<div class="food-name">'+
-            escapeHTML(food.name)+
-            '</div>'+
-
-            '<p>📦 '+
-            food.amount+
-            '개</p>'+
-
-            '<span class="badge '+cls+'">'+
-            text+
-            '</span>'+
-
-            '<p>📅 '+
-            food.expiry+
-            '</p>'+
-
-            '<button class="eat" '+
-            'onclick="eatOne('+food.id+')">'+
-            '🍽️ 1개 먹음'+
-            '</button>'+
-
-            '<button class="delete" '+
-            'onclick="deleteFood('+food.id+')">'+
-            '🗑️ 삭제'+
-            '</button>';
-
-            grid.appendChild(div);
-
-        });
-
-        box.appendChild(grid);
-
-    });
 }
 
 
-/* =====================
-   카메라
-===================== */
+/* =========================
+카메라
+========================= */
 
 let stream=null;
 
 
 async function startCamera(){
 
-    try{
+try{
 
-        if(!navigator.mediaDevices){
+stream=
+await navigator.mediaDevices
+.getUserMedia({
 
-            throw new Error(
-                "카메라 기능을 사용할 수 없습니다."
-            );
-        }
+video:{
+facingMode:{
+ideal:"environment"
+}
+},
 
-        stream=
-        await navigator.mediaDevices
-        .getUserMedia({
+audio:false
 
-            video:{
-                facingMode:{
-                    ideal:"environment"
-                }
-            },
+});
 
-            audio:false
+document.getElementById(
+"camera"
+).srcObject=stream;
 
-        });
+cameraMessage(
+"📷 카메라가 켜졌어요!"
+);
 
-        document.getElementById(
-            "camera"
-        ).srcObject=stream;
+}
 
-        showStatus(
-            "📷 카메라가 켜졌어요! 음식이 잘 보이게 찍어주세요."
-        );
+catch(error){
 
-    }
-    catch(error){
+console.log(error);
 
-        console.error(error);
+cameraMessage(
+"⚠️ 카메라를 사용할 수 없어요. 직접 적어도 돼요!"
+);
 
-        showStatus(
-            "⚠️ 카메라를 사용할 수 없어요. 직접 적어도 돼요! 😊"
-        );
+document.getElementById(
+"manualBox"
+).style.display="block";
 
-        document.getElementById(
-            "manualBox"
-        ).style.display="block";
-    }
+}
+
 }
 
 
 function stopCamera(){
 
-    if(stream){
+if(stream){
 
-        stream.getTracks()
-        .forEach(
-            track=>track.stop()
-        );
+stream.getTracks()
+.forEach(
+track=>track.stop()
+);
 
-        stream=null;
-    }
+stream=null;
 
-    document.getElementById(
-        "camera"
-    ).srcObject=null;
+}
+
+document.getElementById(
+"camera"
+).srcObject=null;
+
 }
 
 
 function takePhoto(){
 
-    if(!stream){
+if(!stream){
 
-        alert(
-            "먼저 📷 카메라 켜기를 눌러주세요!"
-        );
+alert(
+"먼저 📷 카메라 켜기를 눌러주세요!"
+);
 
-        return;
-    }
+return;
 
-    let video=
-    document.getElementById(
-        "camera"
-    );
+}
 
-    let canvas=
-    document.getElementById(
-        "canvas"
-    );
+const video=
+document.getElementById(
+"camera"
+);
 
-    canvas.width=
-    video.videoWidth;
+const canvas=
+document.getElementById(
+"canvas"
+);
 
-    canvas.height=
-    video.videoHeight;
+canvas.width=
+video.videoWidth;
 
-    let ctx=
-    canvas.getContext("2d");
+canvas.height=
+video.videoHeight;
 
-    ctx.drawImage(
-        video,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+const ctx=
+canvas.getContext("2d");
 
-    let image=
-    canvas.toDataURL(
-        "image/jpeg",
-        .82
-    );
+ctx.drawImage(
+video,
+0,
+0,
+canvas.width,
+canvas.height
+);
 
-    document.getElementById(
-        "preview"
-    ).src=image;
+const image=
+canvas.toDataURL(
+"image/jpeg",
+.85
+);
 
-    document.getElementById(
-        "preview"
-    ).style.display="block";
+document.getElementById(
+"preview"
+).src=image;
 
-    /*
-       다음 단계에서 이 사진을
-       실제 AI 서버로 보내게 됩니다.
-    */
+document.getElementById(
+"preview"
+).style.display="block";
 
-    showStatus(
-        "📸 사진을 찍었어요!\n"+
-        "다음 단계에서 이 사진을 AI가 분석하도록 연결할 수 있어요."
-    );
+cameraMessage(
+"📸 사진을 찍었어요!\n"+
+"AI 인식에 실패하면 직접 적어도 돼요."
+);
 
-    document.getElementById(
-        "manualBox"
-    ).style.display="block";
+document.getElementById(
+"manualBox"
+).style.display="block";
+
 }
 
 
-/* =====================
-   상태 표시
-===================== */
+function cameraMessage(text){
 
-function showStatus(text){
+const box=
+document.getElementById(
+"cameraStatus"
+);
 
-    let box=
-    document.getElementById(
-        "status"
-    );
+box.style.display="block";
 
-    box.style.display="block";
+box.textContent=text;
 
-    box.textContent=text;
 }
 
 
-/* =====================
-   레시피
-===================== */
+/* =========================
+레시피
+========================= */
 
 const recipes=[
 
 {
-    name:"🍳 간장계란밥",
+name:"🍳 간장계란밥",
 
-    required:[
-        "밥",
-        "계란",
-        "간장",
-        "참기름"
-    ]
+required:[
+"밥",
+"계란",
+"간장",
+"참기름"
+]
 },
 
 {
-    name:"🍅 토마토 계란볶음",
+name:"🍅 토마토 계란볶음",
 
-    required:[
-        "토마토",
-        "계란",
-        "식용유"
-    ]
+required:[
+"토마토",
+"계란",
+"식용유"
+]
 },
 
 {
-    name:"🥔 감자볶음",
+name:"🥔 감자볶음",
 
-    required:[
-        "감자",
-        "식용유",
-        "소금"
-    ]
+required:[
+"감자",
+"식용유",
+"소금"
+]
 },
 
 {
-    name:"🍜 라면",
+name:"🥪 계란 토스트",
 
-    required:[
-        "라면",
-        "물"
-    ]
+required:[
+"빵",
+"계란",
+"식용유"
+]
+},
+
+{
+name:"🍜 라면",
+
+required:[
+"라면",
+"물"
+]
 }
 
 ];
 
 
-function normalize(name){
-
-    return name
-    .replace(/\s/g,"")
-    .toLowerCase();
-}
-
-
 function hasFood(required){
 
-    return data.foods.some(
-        food=>
-        food.amount>0 &&
-        normalize(food.name)
-        .includes(
-            normalize(required)
-        )
-    );
+const wanted=
+required
+.replace(/\s/g,"")
+.toLowerCase();
+
+return data.foods.some(
+food=>
+food.amount>0 &&
+food.name
+.replace(/\s/g,"")
+.toLowerCase()
+.includes(wanted)
+);
+
 }
 
 
-function recommendRecipes(){
+function recommendFood(){
 
-    let box=
-    document.getElementById(
-        "recipeList"
-    );
+const box=
+document.getElementById(
+"recipeResult"
+);
 
-    let html="";
+let html="";
 
-    recipes.forEach(recipe=>{
+recipes.forEach(recipe=>{
 
-        let missing=
-        recipe.required.filter(
-            x=>!hasFood(x)
-        );
+const missing=
+recipe.required.filter(
+item=>!hasFood(item)
+);
 
-        let available=
-        recipe.required.filter(
-            x=>hasFood(x)
-        );
+html+=
+`
+<div class="recipe">
 
-        html+=
-        '<div class="recipe">'+
+<h3>
+${recipe.name}
+</h3>
+`;
 
-        '<h3>'+
-        recipe.name+
-        '</h3>';
+recipe.required.forEach(item=>{
 
-        recipe.required.forEach(req=>{
+const ok=
+hasFood(item);
 
-            let ok=
-            hasFood(req);
+html+=
+`
+<div class="${ok?"ok":"no"}">
+${ok?"✅":"❌"} ${item}
+</div>
+`;
 
-            html+=
-            '<p class="'+
-            (ok?"ok":"missing")+
-            '">'+
+});
 
-            (ok?"✅ ":"❌ ")+
 
-            escapeHTML(req)+
+if(missing.length===0){
 
-            '</p>';
+html+=
+`
+<p class="ok">
+🎉 지금 가지고 있는 재료로 만들 수 있어요!
+</p>
+`;
 
-        });
+}else{
 
-        if(missing.length===0){
+html+=
+`
+<p class="no">
+⚠️ 부족한 재료:
+${missing.join(", ")}
+</p>
+`;
 
-            html+=
-            '<p class="ok">'+
-            '🎉 지금 가지고 있는 재료로 만들 수 있어요!'+
-            '</p>';
+}
 
-        }else{
+html+=
+`
+</div>
+`;
 
-            html+=
-            '<p class="missing">'+
-            '⚠️ 부족한 재료: '+
-            missing
-            .map(escapeHTML)
-            .join(", ")+
-            '</p>';
+});
 
-        }
+box.innerHTML=html;
 
-        html+='</div>';
-
-    });
-
-    box.innerHTML=html;
 }
 
 
-/* =====================
-   시작
-===================== */
+/* 시작 */
 
 renderFoods();
 
