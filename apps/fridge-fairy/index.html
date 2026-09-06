@@ -378,6 +378,73 @@ min-height:500px;
 
 }
 </style>
+<style>
+.storage{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:16px;
+    align-items:stretch;
+}
+
+.left-fridge,
+.right-fridge{
+    min-height:650px;
+}
+
+.left-fridge{
+    display:flex;
+    flex-direction:column;
+}
+
+.right-fridge{
+    display:flex;
+    flex-direction:column;
+}
+
+.left-fridge .shelf{
+    flex:1;
+    min-height:0;
+}
+
+.right-fridge .shelf{
+    flex:1;
+    min-height:0;
+}
+
+.left-fridge .food-grid,
+.right-fridge .food-grid{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.pantry{
+    min-height:650px;
+}
+
+.pantry-inside{
+    min-height:530px;
+}
+
+.pantry .food-grid{
+    grid-template-columns:repeat(2,1fr);
+}
+
+@media(max-width:900px){
+    .storage{
+        grid-template-columns:1fr;
+    }
+
+    .left-fridge,
+    .right-fridge,
+    .pantry{
+        min-height:auto;
+    }
+
+    .left-fridge .shelf,
+    .right-fridge .shelf{
+        min-height:180px;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -427,12 +494,12 @@ min-height:500px;
 <label>보관 위치</label>
 
 <select id="location">
-
-<option>🧊 냉장실</option>
-<option>❄️ 냉동실</option>
-<option>🚪 냉장고 문</option>
-<option>🗄️ 식품 서랍</option>
-
+    <option>🧊 평범 냉장고</option>
+    <option>❄️ 냉동실</option>
+    <option>🥬 신선 냉장고</option>
+    <option>🥤 음료수 보관 냉장고</option>
+    <option>🥬 김치 냉장고</option>
+    <option>🗄️ 식품 서랍</option>
 </select>
 </div>
 
@@ -523,7 +590,6 @@ border-radius:18px;
 
 <option>🧊 냉장실</option>
 <option>❄️ 냉동실</option>
-<option>🚪 냉장고 문</option>
 <option>🗄️ 식품 서랍</option>
 
 </select>
@@ -560,70 +626,100 @@ gap:8px;
 
 <div class="storage">
 
-<!-- 냉장고 -->
+    <!-- 왼쪽 : 2칸 -->
+    <div class="fridge left-fridge">
 
-<div class="fridge">
+        <div class="fridge-title">
+            🧊 냉장고
+        </div>
 
-<div class="fridge-light"></div>
+        <!-- 위 : 냉동실 -->
+        <div class="shelf freezer">
+            <div class="shelf-title">
+                ❄️ 냉동실
+            </div>
 
-<div class="fridge-title">
-🧊 냉장고
+            <div id="freezerList" class="food-grid"></div>
+        </div>
+
+        <!-- 아래 : 평범 냉장고 -->
+        <div class="shelf normal-fridge">
+            <div class="shelf-title">
+                🧊 평범 냉장고
+            </div>
+
+            <div id="normalFridgeList" class="food-grid"></div>
+        </div>
+
+    </div>
+
+
+    <!-- 오른쪽 : 3칸 -->
+    <div class="fridge right-fridge">
+
+        <div class="fridge-title">
+            🥬 신선·음료·김치 냉장고
+        </div>
+
+        <!-- 위 : 김치 냉장고 -->
+        <div class="shelf kimchi">
+            <div class="shelf-title">
+                🥬 김치 냉장고
+            </div>
+
+            <div id="kimchiList" class="food-grid"></div>
+        </div>
+
+        <!-- 가운데 : 음료수 -->
+        <div class="shelf drinks">
+            <div class="shelf-title">
+                🥤 음료수 보관 냉장고
+            </div>
+
+            <div id="drinkList" class="food-grid"></div>
+        </div>
+
+        <!-- 아래 : 신선 냉장고 -->
+        <div class="shelf fresh">
+            <div class="shelf-title">
+                🥬 신선 냉장고
+            </div>
+
+            <div id="freshList" class="food-grid"></div>
+        </div>
+
+    </div>
+
+
+    <!-- 옆 : 식품 서랍 -->
+    <div class="pantry">
+
+        <div class="pantry-title">
+            🗄️ 식품 서랍
+        </div>
+
+        <div class="handle"></div>
+
+        <div class="pantry-inside">
+
+            <div style="
+                text-align:center;
+                font-size:13px;
+                font-weight:bold;
+                margin-bottom:10px;
+            ">
+                🍚 상온 보관 음식
+            </div>
+
+            <div id="pantryList" class="food-grid"></div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="shelf">
-
-<div class="shelf-title">
-❄️ 냉장실 / 냉동실
 </div>
-
-<div id="fridgeList" class="food-grid"></div>
-
-</div>
-
-<div class="shelf">
-
-<div class="shelf-title">
-🚪 냉장고 문
-</div>
-
-<div id="doorList" class="food-grid"></div>
-
-</div>
-
-</div>
-
-
-<!-- 식품 서랍 -->
-
-<div class="pantry">
-
-<div class="pantry-title">
-🗄️ 식품 서랍
-</div>
-
-<div class="handle"></div>
-
-<div class="pantry-inside">
-
-<div style="
-text-align:center;
-font-size:13px;
-font-weight:bold;
-margin-bottom:10px;
-">
-🍚 상온 보관 음식
-</div>
-
-<div id="pantryList" class="food-grid"></div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 
 <!-- 오늘 뭐 먹지 -->
 
@@ -1167,70 +1263,93 @@ foods
 
 function renderFoods(){
 
-const fridge=
-document.getElementById(
-"fridgeList"
-);
+    const freezer =
+        document.getElementById("freezerList");
 
-const door=
-document.getElementById(
-"doorList"
-);
+    const normal =
+        document.getElementById("normalFridgeList");
 
-const pantry=
-document.getElementById(
-"pantryList"
-);
+    const fresh =
+        document.getElementById("freshList");
 
+    const drinks =
+        document.getElementById("drinkList");
 
-const foods=
-data.foods.filter(
-f=>f.amount>0
-);
+    const kimchi =
+        document.getElementById("kimchiList");
 
+    const pantry =
+        document.getElementById("pantryList");
 
-const fridgeFoods=
-foods.filter(
-f=>
-f.location==="🧊 냉장실" ||
-f.location==="❄️ 냉동실"
-);
+    const foods =
+        data.foods.filter(f => f.amount > 0);
 
+    const freezerFoods =
+        foods.filter(f =>
+            f.location === "❄️ 냉동실"
+        );
 
-const doorFoods=
-foods.filter(
-f=>
-f.location==="🚪 냉장고 문"
-);
+    const normalFoods =
+        foods.filter(f =>
+            f.location === "🧊 평범 냉장고" ||
+            f.location === "🧊 냉장실"
+        );
 
+    const freshFoods =
+        foods.filter(f =>
+            f.location === "🥬 신선 냉장고"
+        );
 
-const pantryFoods=
-foods.filter(
-f=>
-f.location==="🗄️ 식품 서랍"
-);
+    const drinkFoods =
+        foods.filter(f =>
+            f.location === "🥤 음료수 보관 냉장고"
+        );
 
+    const kimchiFoods =
+        foods.filter(f =>
+            f.location === "🥬 김치 냉장고"
+        );
 
-renderGroup(
-fridge,
-fridgeFoods,
-"냉장고가 비어 있어요 🧊"
-);
+    const pantryFoods =
+        foods.filter(f =>
+            f.location === "🗄️ 식품 서랍"
+        );
 
+    renderGroup(
+        freezer,
+        freezerFoods,
+        "냉동실이 비어 있어요 ❄️"
+    );
 
-renderGroup(
-door,
-doorFoods,
-"냉장고 문이 비어 있어요 🚪"
-);
+    renderGroup(
+        normal,
+        normalFoods,
+        "냉장고가 비어 있어요 🧊"
+    );
 
+    renderGroup(
+        fresh,
+        freshFoods,
+        "신선 냉장고가 비어 있어요 🥬"
+    );
 
-renderGroup(
-pantry,
-pantryFoods,
-"식품 서랍이 비어 있어요 🗄️"
-);
+    renderGroup(
+        drinks,
+        drinkFoods,
+        "음료수 냉장고가 비어 있어요 🥤"
+    );
 
+    renderGroup(
+        kimchi,
+        kimchiFoods,
+        "김치 냉장고가 비어 있어요 🥬"
+    );
+
+    renderGroup(
+        pantry,
+        pantryFoods,
+        "식품 서랍이 비어 있어요 🗄️"
+    );
 }
 
 
